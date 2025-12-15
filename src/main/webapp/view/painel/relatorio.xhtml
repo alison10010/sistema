@@ -1,0 +1,511 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/view/layout/layout.xhtml">
+
+    <ui:define name="title">Relatório</ui:define>
+
+    <ui:define name="content">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+        <!-- =============================== -->
+        <!--   ESTILOS DO PAINEL NOVO       -->
+        <!-- =============================== -->
+        <style>
+        
+        .light-table-body tr {
+    border-bottom: 1px solid #eef2f7;
+}
+
+.light-table-body tr:last-child {
+    border-bottom: none;
+}
+
+.light-table-body td {
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+}
+        
+	        body {
+	            background: #f8fafc;
+	            color: #111827;
+	        }
+	
+	        .navbar {
+	            background: linear-gradient(90deg, #2563eb, #60a5fa);
+	        }
+	
+	        .navbar .navbar-text {
+	            color: rgba(255,255,255,.85);
+	        }
+	
+	        .card {
+	            border: none;
+	            border-radius: 1rem;
+	            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+	            background: #ffffff;
+	        }
+	
+	        .card-header {
+	            border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+	            background: #ffffff;
+	        }
+	
+	        .stat-card {
+	            position: relative;
+	            overflow: hidden;
+	        }
+	
+	        .stat-card .icon {
+	            font-size: 2.4rem;
+	            opacity: .12;
+	            position: absolute;
+	            right: 1rem;
+	            bottom: .2rem;
+	        }
+	
+	        .stat-label {
+	            font-size: .8rem;
+	            letter-spacing: .09em;
+	            text-transform: uppercase;
+	            color: #6b7280;
+	        }
+	
+	        .stat-value {
+	            font-size: 1.6rem;
+	            font-weight: 700;
+	            color: #111827;
+	        }
+	
+	        .chip {
+	            display: inline-flex;
+	            align-items: center;
+	            gap: .4rem;
+	            padding: .15rem .55rem;
+	            border-radius: 999px;
+	            font-size: .75rem;
+	        }
+	
+	        .chip-normal {
+	            background: #dbeafe;
+	            color: #1d4ed8;
+	        }
+	
+	        .chip-prio {
+	            background: #fee2e2;
+	            color: #b91c1c;
+	        }
+	
+	        .badge-status {
+	            border-radius: 999px;
+	            font-size: .7rem;
+	            padding: .3em .7em;
+	        }
+	
+	        .footer-relatorio {
+	            font-size: .8rem;
+	            color: #6b7280;
+	            border-top: 1px dashed rgba(148,163,184,.6);
+	            margin-top: 1.5rem;
+	            padding-top: .75rem;
+	        }
+	
+	        .list-group-item.bg-transparent {
+	            background-color: transparent;
+	        }
+	
+	        @media print {
+	            body {
+	                background: #ffffff;
+	                color: #000000;
+	            }
+	            .navbar {
+	                background: #ffffff !important;
+	                color: #000 !important;
+	                box-shadow: none !important;
+	            }
+	            .navbar .navbar-brand,
+	            .navbar .navbar-text {
+	                color: #000 !important;
+	            }
+	            .card {
+	                box-shadow: none !important;
+	            }
+	        }
+	    </style>
+	    
+        <!-- =============================== -->
+        <!--           FORMULARIO            -->
+        <!-- =============================== -->
+
+        <h:form id="formPainel">
+        
+        	<p:remoteCommand name="rcAtualizaNotif" actionListener="#{painelController.carregarResumo()}" process="@this" update="formPainel"  oncomplete="renderChartServicos();" />
+
+            <nav class="navbar navbar-expand-lg mb-4">
+			    <div class="container-fluid py-2">
+			        <div class="d-flex flex-column flex-md-row gap-1 align-items-md-center">
+			            <span class="navbar-brand fw-semibold text-white mb-0">
+			                <i class="bi bi-speedometer2 me-1"></i> Painel de Atendimento
+			            </span>
+			            <span class="navbar-text small">
+			                Relatório sintético de senhas, atendimentos e serviços
+			            </span>
+			        </div>
+			        
+			        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+			             <span class="badge rounded-pill text-bg-light px-3 py-2">
+			                 <i class="bi bi-info-circle me-1 text-primary"></i>
+			                 Atualização em tempo real
+			             </span>
+			         </div>
+			         
+			        <button class="btn btn-outline-light btn-sm" onclick="window.print()">
+			            <i class="bi bi-printer me-1"></i> Imprimir
+			        </button>
+			    </div>
+			</nav>
+			
+			<div class="container mb-5">			
+			    <!-- Linha de Cards com Totais -->
+			    <div class="row g-3 mb-4">
+			        <!-- ... (MESMOS CARDS DA VERSÃO ANTERIOR, NÃO ALTERADOS) ... -->
+			        <div class="col-md-3">
+			            <div class="card stat-card">
+			                <div class="card-body">
+			                    <div class="stat-label">Senhas - Hoje</div>
+			                    <div class="d-flex justify-content-between align-items-center">
+			                        <div class="stat-value">#{painelController.dashboardResumoDTO.senhasHoje}</div>
+			                        <!-- <div class="small text-success ms-2">
+			                            <i class="bi bi-arrow-up-right"></i> +12% vs. ontem
+			                        </div> -->
+			                    </div>
+			                </div>
+			            </div>
+			        </div>
+			
+			        <div class="col-md-3">
+			            <div class="card stat-card">
+			                <div class="card-body">
+			                    <div class="stat-label">Senhas - Mês</div>
+			                    <div class="stat-value">#{painelController.dashboardResumoDTO.senhasMes}</div>
+			                    <i class="bi bi-calendar3 icon text-info"></i>
+			                </div>
+			            </div>
+			        </div>
+			        
+			        <div class="col-md-3">
+			            <div class="card stat-card">
+			                <div class="card-body">
+			                    <div class="stat-label">Atendimentos Concluídos Hoje</div>
+			                    <div class="stat-value">#{painelController.dashboardResumoDTO.concluidosHoje}</div>
+			                    <i class="bi bi-check2-circle icon text-success"></i>
+			                </div>
+			            </div>
+			        </div>
+			
+			        <div class="col-md-3">
+			            <div class="card stat-card">
+			                <div class="card-body">
+			                    <div class="stat-label">Aguardando atendimento</div>
+			                    <div class="stat-value">#{painelController.dashboardResumoDTO.aguardandoHoje}</div>
+			                    <i class="bi bi-stopwatch icon text-warning"></i>
+			                </div>
+			            </div>
+			        </div>
+			    </div>
+			
+			    <!-- DOIS BLOCOS LADO A LADO -->
+			    <div class="row g-4">
+			
+			        <!-- COLUNA 1 — TOP SERVIÇOS -->
+			        <div class="col-lg-6">
+			            <div class="card h-100">
+			                <div class="card-header d-flex justify-content-between align-items-center">
+			                    <span class="fw-semibold">Top Serviços Hoje</span>
+			                    <span class="small text-muted">Qtd. de senhas por serviço</span>
+			                </div>
+			                <div class="card-body">
+			                    <canvas id="chartServicos" height="140"></canvas>
+			                </div>
+			            </div>
+			        </div>
+						
+			        <!-- COLUNA 2 — DISTRIBUIÇÃO POR TIPO + SUBSERVIÇOS -->
+			        <div class="col-lg-6">
+			            <div class="card h-100">
+			                <div class="card-header d-flex justify-content-between align-items-center">
+			                    <span class="fw-semibold">Distribuição por Tipo / Sub-serviço</span>
+			                </div>
+			
+			                <div class="card-body p-0">
+							    <div class="table-responsive" style="max-height: 340px;">
+							        <table class="table table-borderless align-middle mb-0 light-table">
+							            <thead class="small text-muted border-bottom">
+							                <tr>
+							                    <th class="ps-4">Serviço</th>
+							                    <th>Subserviço</th>
+							                    <th class="text-end pe-4">Qtd.</th>
+							                </tr>
+							            </thead>
+							
+							            <tbody class="small light-table-body">
+										    <ui:repeat value="#{painelController.subServicosNoDia}" var="item">
+										        <tr>
+										            <td class="ps-4 fw-medium">
+										                #{item[0]}
+										            </td>
+										
+										            <td class="text-muted">
+										                #{item[1]}
+										            </td>
+										
+										            <td class="text-end pe-4 fw-semibold text-primary">
+										                <span class="badge rounded-pill bg-light text-primary px-3" style="font-size: 13px;">#{item[2]}</span>
+										            </td>
+										        </tr>
+										    </ui:repeat>
+										</tbody>							
+							        </table>
+							    </div>
+							</div>
+
+			            </div>
+			        </div>			
+			    </div>
+			    
+			    <br />
+			    <!-- ATENDIMENTOS DE HOJE EM UMA LINHA COMPLETA -->
+			    <div class="row mb-4">
+			        <div class="col-12">
+			            <div class="card h-100">
+			                <div class="card-header d-flex justify-content-between align-items-center">
+			                    <div>
+			                        <span class="fw-semibold">Atendimentos de Hoje</span>
+			                        <div class="small text-muted">Atualização em tempo real</div>
+			                    </div>
+			                    <span class="badge rounded-pill text-primary border border-primary-subtle bg-primary-subtle small">
+			                        Total: #{painelController.senhasHoje().size()} últimos registros
+			                    </span>
+			                </div>
+			
+			                <div class="card-body p-0">
+			                    <div class="table-responsive" style="max-height: 420px;">
+			                    
+			                    <h:form id="formAssinatura">
+	                	
+				                	<p:remoteCommand name="rcAtualizaTabela" update="tabela" />
+				                	
+							        <p:dataTable value="#{painelController.senhasHoje()}" var="senhaFila" emptyMessage="Sem atendimento hoje!" paginator="true" rows="5" paginatorPosition="bottom" 
+							        id="tabela" reflow="true">
+				
+							            <p:column headerText="Hora">
+							               <h:outputText value="#{senhaFila.data}">
+									          <f:convertDateTime type="localDateTime" pattern="dd/MM/yyyy HH:mm" timeZone="America/Rio_Branco"/>
+									        </h:outputText>	
+							            </p:column>
+							            
+							            <p:column headerText="Senha">
+							               <b>  <h:outputText value="#{senhaFila.senhaVisual}" /></b>
+							            </p:column>
+							            
+							            <p:column headerText="Tipo" width="8%">
+							                <h:outputText class="badge #{senhaFila.tipo == 'P' ? 'bg-danger' : 'bg-primary'} rounded-pill" value="#{senhaFila.tipo == 'P' ? 'Prioridade' : 'Normal'}" />
+							            </p:column>
+							            
+							            <p:column headerText="Local">
+							            	<h:outputLabel value="#{senhaFila.comparecer} #{senhaFila.guiche}" style="text-transform: capitalize;"/>
+							            </p:column>
+							            
+							            <p:column headerText="Serviço" width="10%">
+											<h:outputText  value="#{senhaFila.subservico}" />
+										</p:column>		
+							            
+							            <p:column headerText="Tipo de atendimento" width="13%">
+							               <h:outputText  value="#{senhaFila.servico}" />
+							            </p:column>	
+							            
+							            <p:column headerText="Status" width="13%">
+							               <h:outputText class="badge bg-success badge-status" value="Concluído" />
+							            </p:column>		            
+							           				
+							        </p:dataTable>					    						
+													        
+							    </h:form>
+			                    </div>
+			                </div>
+			            </div>
+			        </div>
+			    </div>
+			
+			
+			    <!-- Rodapé -->
+			    <div class="footer-relatorio mt-4 pt-3">
+			        <div class="d-flex justify-content-between flex-wrap">
+			            <div>
+			                <strong>Sistema de Atendimento — Relatório Sintético</strong><br />			                
+			            </div>
+			            <div class="text-md-end">
+			                Usuário: <strong>Alison</strong><br />
+			                Ambiente: <span class="text-primary">DESENVOLVIMENTO</span>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+			
+			<script id="servicosNoDiaJson" type="application/json">
+  				<h:outputText value="#{painelController.servicosNoDiaJson}" escape="false"/>
+			</script>
+
+        </h:form>
+        
+        <h:outputScript target="body">
+	    //<![CDATA[
+	    
+	    // =================================================================
+	    // ======== TOP SERVIÇOS (DINÂMICO) - BARRAS EMPILHADAS ========= 
+	    // =================================================================
+	    const dadosServicos = #{painelController.servicosNoDiaJson}; 
+	
+	    const labelsServicos = dadosServicos.map(d => d.label);
+	    const dataNormal = dadosServicos.map(d => d.normal);
+	    const dataPrioridade = dadosServicos.map(d => d.prioridade);
+	
+	    const ctxServicos = document.getElementById('chartServicos');
+	    if (ctxServicos && labelsServicos.length > 0) {
+	        new Chart(ctxServicos, {
+	            type: 'bar',
+	            data: {
+	                labels: labelsServicos,
+	                datasets: [
+	                    // DATASET 1: Prioridade
+	                    {
+	                        label: 'Prioridade',
+	                        data: dataPrioridade,
+	                        borderWidth: 1,
+	                        backgroundColor: '#ef4444', 
+	                        borderColor: '#b91c1c'
+	                    },
+	                    // DATASET 2: Normal
+	                    {
+	                        label: 'Normal',
+	                        data: dataNormal,
+	                        borderWidth: 1,
+	                        backgroundColor: '#3b82f6', 
+	                        borderColor: '#1d4ed8'
+	                    }
+	                ]
+	            },
+	            options: {
+	                plugins: {
+	                    legend: { 
+	                        display: true,
+	                        position: 'bottom',
+	                        labels: { color: '#4b5563' } 
+	                    }
+	                },
+	                scales: {
+	                    x: {
+	                        stacked: true, 
+	                        ticks: { color: '#4b5563' },
+	                        grid: { display: false }
+	                    },
+	                    y: {
+	                        stacked: true, 
+	                        beginAtZero: true,
+	                        ticks: { color: '#4b5563' },
+	                        grid: { color: 'rgba(148,163,184,.4)' }
+	                    }
+	                }
+	            }
+	        });
+	    }
+	    //]]>
+	</h:outputScript>
+
+<!-- JS de WebSocket (ajuste os paths conforme seus webjars / estáticos) -->
+        <script src="/sistema/bootstrap/sockjs.min.js"></script>
+        <script src="/sistema/bootstrap/stomp.min.js"></script>
+
+	<script type="text/javascript">
+	    		//<![CDATA[
+		    var socketUpdate = new SockJS('/sistema/ws');
+		    var stompUpdate = Stomp.over(socketUpdate);
+		
+		    stompUpdate.debug = null; // opcional (remove logs)
+		
+		    stompUpdate.connect({}, function () {
+		
+		        console.log("Conectado ao WS!");
+		
+		        // Chama o AJAX para atualizar a lista de senhas
+		        stompUpdate.subscribe('/topic/listEsperaPainel', function (message) {
+		        	rcAtualizaNotif();
+		        });
+		
+		        //  Mostra alerta quando gerar senha
+		        stompUpdate.subscribe('/topic/senha', function (message) {
+		        	rcAtualizaNotif();
+		        });
+		
+		    }, function(error){
+		        console.error("Erro no WebSocket:", error);
+		    });
+	    //]]>
+	</script>
+	
+	
+	<h:outputScript target="body">
+	  //<![CDATA[
+	  window.chartServicosInstance = window.chartServicosInstance || null;
+	
+	  function renderChartServicos() {
+	    // Lê JSON do DOM (melhor para AJAX)
+	    const el = document.getElementById('servicosNoDiaJson');
+	    if (!el) return;
+	
+	    const dados = JSON.parse((el.textContent || "[]").trim());
+	    const labels = dados.map(d => d.label);
+	    const normal = dados.map(d => d.normal);
+	    const prioridade = dados.map(d => d.prioridade);
+	
+	    const canvas = document.getElementById('chartServicos');
+	    if (!canvas || labels.length === 0) return;
+	
+	    if (window.chartServicosInstance) {
+	      window.chartServicosInstance.destroy();
+	    }
+	
+	    window.chartServicosInstance = new Chart(canvas, {
+	      type: 'bar',
+	      data: {
+	        labels,
+	        datasets: [
+	          { label: 'Prioridade', data: prioridade, borderWidth: 1, backgroundColor: '#ef4444', borderColor: '#b91c1c' },
+	          { label: 'Normal',     data: normal,     borderWidth: 1, backgroundColor: '#3b82f6', borderColor: '#1d4ed8' }
+	        ]
+	      },
+	      options: {
+	        plugins: { legend: { display: true, position: 'bottom', labels: { color: '#4b5563' } } },
+	        scales: {
+	          x: { stacked: true, ticks: { color: '#4b5563' }, grid: { display: false } },
+	          y: { stacked: true, beginAtZero: true, ticks: { color: '#4b5563' }, grid: { color: 'rgba(148,163,184,.4)' } }
+	        }
+	      }
+	    });
+	  }
+	  //]]>
+	</h:outputScript>
+		
+
+        
+          
+
+
+    </ui:define>
+</ui:composition>

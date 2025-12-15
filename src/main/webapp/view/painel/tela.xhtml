@@ -1,0 +1,486 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/view/layout/layout.xhtml">
+
+    <ui:define name="title">Tela de Chamadas</ui:define>
+
+    <ui:define name="content">
+
+        <link rel="stylesheet" href="/sistema/css/tela.css" />
+        
+        <style>
+        
+        	/* ===== Layout Video (igual ao desenho) ===== */
+			.main-layout-video{
+			  display: grid;
+			  grid-template-columns: 2.2fr 1fr; /* esquerda maior, direita menor */
+			  height: calc(100vh - 70px);       /* ajuste conforme sua header */
+			  gap: 0;
+			  border-top: 3px solid #cbd5e1;
+			}
+			
+			.video-panel{
+			  border-right: 3px solid #cbd5e1; /* linha grossa central */
+			  display: flex;
+			  align-items: center;
+			  justify-content: center;
+			  padding: 0;
+			  background: #fff;
+			}
+			
+			.video-frame{
+			  width: 100%;
+			  height: 100%;
+			}
+			
+			.video-frame iframe{
+			  width: 100%;
+			  height: 100%;
+			  border: 0;
+			}
+			
+			.right-panel{
+			  display: grid;
+			  grid-template-rows: 0.5fr 1.5fr; /* topo e baixo */
+			  height: 100%;
+			  background: #fff;
+			}
+			
+			.current-call-video{
+			  border-bottom: 3px solid #cbd5e1;
+			  margin-top: 15px;
+			  flex-direction: column;
+			  align-items: center;
+			  justify-content: center;
+			  padding: 18px;
+			  text-align: center;
+			}
+			
+			.current-call-video .label{
+			  font-size: 1.4rem;
+			  opacity: .85;
+			  margin-bottom: 12px;
+			}
+			
+			.current-call-video .big-ticket{
+			  font-size: 4.2rem;
+			  font-weight: 900;
+			  line-height: 1;
+			  margin-bottom: 14px;
+			}
+			
+			.current-call-video .room-value{
+			  font-size: 3.2rem;
+			  font-weight: 900;
+			  line-height: 1.1;
+			}
+			
+			.previous-calls-video{
+			  padding: 18px 22px;
+			  overflow: hidden;
+			  display: flex;
+			  flex-direction: column;
+			}
+			
+			.previous-calls-video #filaHistorico{
+			  overflow: auto;        /* rola se tiver muitas */
+			  padding-right: 6px;
+			}
+			
+			.previous-item-video{
+			  display: flex;
+			  justify-content: space-between;
+			  align-items: baseline;
+			  padding: 10px 0;
+			  border-bottom: 1px solid rgba(0,0,0,.08);
+			  font-weight: 900;
+			}
+			
+			.previous-item-video .ticket{
+			  font-size: 2.2rem;
+			  letter-spacing: .02em;
+			}
+			
+			.previous-item-video .guiche{
+			  font-size: 2.2rem;
+			}
+			
+			/* Responsivo: em telas menores vira coluna */
+			@media (max-width: 992px){
+			  .main-layout-video{
+			    grid-template-columns: 1fr;
+			    grid-template-rows: 1.2fr 1fr;
+			  }
+			  .video-panel{
+			    border-right: 0;
+			    border-bottom: 4px solid #111;
+			  }
+			  .right-panel{
+			    grid-template-rows: auto 1fr;
+			  }
+			}
+			
+				
+        </style>
+
+		<!-- CSS do overlay (pode mover para /sistema/css/tela.css) -->
+         <style>
+             .senha-overlay{
+               position: fixed;
+               inset: 0;
+               z-index: 9999;
+               display: flex;
+               align-items: center;
+               justify-content: center;
+               background: rgba(0,0,0,.55);
+               backdrop-filter: blur(6px);
+             }
+             .senha-modal{
+               width: min(720px, 92vw);
+               border-radius: 22px;
+               background: #fff;
+               box-shadow: 0 30px 90px rgba(0,0,0,.35);
+               padding: 26px 28px;
+               text-align: center;
+               border: 2px solid rgba(0,0,0,.08);
+             }
+             .senha-modal-title{
+               font-size: 1.1rem;
+               letter-spacing: .22em;
+               font-weight: 900;
+               color: #334155;
+             }
+             .senha-modal-ticket{
+               margin: 12px 0 14px;
+               font-size: 5rem;
+               font-weight: 900;
+               line-height: 1;
+             }
+             .senha-modal-row{
+               font-size: 1.6rem;
+               display: flex;
+               justify-content: center;
+               gap: 10px;
+               margin-top: 6px;
+             }
+             .senha-modal-row .muted{ color:#64748b; font-weight: 600; }
+             .senha-modal-paciente{
+               margin-top: 10px;
+               font-size: 1.3rem;
+               font-weight: 700;
+               color:#0f172a;
+               opacity: .9;
+             }
+         </style>
+                
+        <!-- Código da tela vindo da URL -->
+        <c:set var="telaCodigo" value="#{empty param.tela ? '' : param.tela}" />
+        <c:set var="codigoTela" value="#{param.tela}" />
+
+        <!-- TOPO -->
+        <div class="header-bar">
+            <div class="header-title">#{telaCodigo}</div>
+            <div id="relogio" class="fs-4 text-secondary"></div>
+        </div>
+
+        <!-- ================= LAYOUT DINÂMICO ================= -->
+        <c:choose>
+
+            <!-- ================================================= -->
+            <!-- =============== LAYOUT VIDEO =================== -->
+            <!-- ================================================= -->
+            <c:when test="#{telaController.layout(codigoTela) eq 1}">
+
+                <div class="main-layout-video">
+
+                    <!-- ESQUERDA: VÍDEO -->
+                    <div class="video-panel">
+                        <div class="video-frame">
+                            <iframe
+                                id="ytplayer"
+                                src="https://www.youtube-nocookie.com/embed/VayOrXlERHs?enablejsapi=1&amp;autoplay=1&amp;controls=0&amp;rel=0&amp;modestbranding=1&amp;loop=1&amp;playlist=VayOrXlERHs"
+                                allow="autoplay; encrypted-media; picture-in-picture"
+                                allowfullscreen="allowfullscreen">
+                            </iframe>
+                        </div>
+                    </div>
+
+                    <!-- DIREITA -->
+                    <div class="right-panel">
+
+                        <!-- TOPO: ÚLTIMA SENHA -->
+                        <div class="current-call-video">
+                        	<div>
+	                            <div class="label">Última senha</div>
+	
+	                            <div class="big-ticket" id="senhaFormatadaAtual">---</div>
+	
+	                            <div class="room-value">
+	                                <span id="guicheAtual">--</span>
+	                            </div>
+	
+	                            <div class="patient-name" id="pacienteAtual"></div>
+	                            <div class="patient-name" id="descricaoAtual" style="opacity:.85; font-size: 1.2rem;"></div>
+                            </div>
+                        </div>
+
+                        <!-- BAIXO: HISTÓRICO -->
+                        <div class="previous-calls-video">
+
+                            <h:form id="formTela">
+
+                                <p:remoteCommand name="rcAtualizaNotif"
+                                                 process="@this"
+                                                 update=":formTela:filaHistorico" />
+
+                                <h:panelGroup id="filaHistorico">
+                                    <ui:repeat value="#{painelController.senhasAnteriores(telaCodigo)}" var="senhaFila">
+                                    <div class="previous-item">
+                                        <strong>#{senhaFila.senhaVisual}</strong>
+
+                                        <div style="display:flex;justify-content:space-between;">
+                                            <div class="previous-meta">
+                                                #{senhaFila.comparecer} #{senhaFila.guiche}
+                                            </div>
+                                            <span class="badge #{senhaFila.tipo == 'P' ? 'bg-danger' : 'bg-primary'} rounded-pill">
+                                                #{senhaFila.tipo == 'P' ? 'Prioridade' : 'Normal'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </ui:repeat>
+                                </h:panelGroup>
+
+                            </h:form>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- MODAL OVERLAY (somente no layout vídeo) -->
+                <div id="senhaOverlay" class="senha-overlay" style="display:none;">
+                    <div class="senha-modal">
+                        <div class="senha-modal-title">CHAMADA</div>
+
+                        <div class="senha-modal-ticket" id="overlaySenha">---</div>
+
+                        <div class="senha-modal-row">
+                            <span class="muted">Comparecer:</span>
+                            <strong id="overlayGuiche">--</strong>
+                        </div>
+
+                        <div class="senha-modal-row">
+                            <span class="muted">Tipo:</span>
+                            <strong id="overlayTipo">--</strong>
+                        </div>
+
+                        <div class="senha-modal-paciente" id="overlayPaciente"></div>
+                    </div>
+                </div>
+                
+            </c:when>
+
+            <!-- ================================================= -->
+            <!-- =============== LAYOUT NORMAL ================== -->
+            <!-- ================================================= -->
+            <c:otherwise>
+
+                <div class="main-layout">
+
+                    <!-- SENHA ATUAL -->
+                    <div class="current-call">
+                        <div class="label">Chamada Atual</div>
+                        <div class="big-ticket" id="senhaFormatadaAtual">---</div>
+
+                        <div class="patient-title">Tipo:</div>
+                        <div class="patient-name" id="descricaoAtual">---</div>
+
+                        <div class="room-title">Comparecer:</div>
+                        <div class="room-value">
+                            <span id="guicheAtual">--</span>
+                        </div>
+
+                        <br />
+                        <div class="patient-name" id="pacienteAtual"></div>
+                    </div>
+
+                    <!-- HISTÓRICO -->
+                    <div class="previous-calls">
+                        <div class="previous-title">Chamados Recentes</div>
+
+                        <h:form id="formTela">
+
+                            <p:remoteCommand name="rcAtualizaNotif"
+                                             process="@this"
+                                             update=":formTela:filaHistorico" />
+
+                            <h:panelGroup id="filaHistorico">
+                                <ui:repeat value="#{painelController.senhasAnteriores(telaCodigo)}" var="senhaFila">
+                                    <div class="previous-item">
+                                        <strong>#{senhaFila.senhaVisual}</strong>
+
+                                        <div style="display:flex;justify-content:space-between;">
+                                            <div class="previous-meta">
+                                                #{senhaFila.comparecer} #{senhaFila.guiche}
+                                            </div>
+                                            <span class="badge #{senhaFila.tipo == 'P' ? 'bg-danger' : 'bg-primary'} rounded-pill">
+                                                #{senhaFila.tipo == 'P' ? 'Prioridade' : 'Normal'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </ui:repeat>
+                            </h:panelGroup>
+
+                        </h:form>
+                    </div>
+                </div>
+
+            </c:otherwise>
+        </c:choose>
+
+        <!-- ================= JS / WEBSOCKET ================= -->
+        <script src="/sistema/bootstrap/sockjs.min.js"></script>
+        <script src="/sistema/bootstrap/stomp.min.js"></script>
+
+        <script type="text/javascript">
+        //<![CDATA[
+            let stompClientTela = null;
+            const telaCodigo = "#{telaCodigo}";
+            const isVideoLayout = #{telaController.layout(codigoTela) eq 1};
+
+            // ---------- YouTube IFrame Player API (para mute/unmute) ----------
+            let ytPlayer = null;
+            let overlayTimer = null;
+
+            (function loadYT(){
+                if (!isVideoLayout) return;
+                const tag = document.createElement('script');
+                tag.src = "https://www.youtube.com/iframe_api";
+                document.head.appendChild(tag);
+            })();
+
+            window.onYouTubeIframeAPIReady = function () {
+                if (!isVideoLayout) return;
+                try {
+                    ytPlayer = new YT.Player('ytplayer', {
+                        events: {
+                            onReady: function() {
+                                // se quiser começar com som, tenta desmutar:
+                                try { ytPlayer.unMute(); } catch(e){}
+                            }
+                        }
+                    });
+                } catch(e) {
+                    console.error("Erro ao iniciar YT Player:", e);
+                }
+            };
+
+            function showSenhaModal(data) {
+                const overlay = document.getElementById('senhaOverlay');
+                if (!overlay) return;
+
+                const senhaFormatada = data.senhaFormatada
+                    || ((data.tipo || '') + ' ' + (data.senha != null ? String(data.senha) : ''));
+
+                document.getElementById('overlaySenha').textContent = senhaFormatada;
+                document.getElementById('overlayGuiche').textContent = data.guiche || '--';
+                document.getElementById('overlayTipo').textContent   = data.descricao || (data.tipo || '--');
+                document.getElementById('overlayPaciente').textContent = data.paciente || '';
+
+                // mostra
+                overlay.style.display = 'flex';
+
+                // muta vídeo
+                try { if (ytPlayer && ytPlayer.mute) ytPlayer.mute(); } catch(e){}
+
+                // fecha após 3s e volta áudio
+                if (overlayTimer) clearTimeout(overlayTimer);
+                overlayTimer = setTimeout(function(){
+                    overlay.style.display = 'none';
+                    try { if (ytPlayer && ytPlayer.unMute) ytPlayer.unMute(); } catch(e){}
+                }, 5000); // Segundos do modal
+            }
+
+            // ---------- WebSocket ----------
+            function conectarTelaPainel() {
+                const socket = new SockJS('/sistema/ws');
+                stompClientTela = Stomp.over(socket);
+                stompClientTela.debug = null;
+
+                stompClientTela.connect({}, function () {
+
+                    stompClientTela.subscribe('/topic/senha/' + telaCodigo, function (msg) {
+                        atualizarTelaComSenha(JSON.parse(msg.body));
+                    });
+
+                    stompClientTela.subscribe('/topic/updateHistorico/' + telaCodigo, function () {
+                        if (typeof rcAtualizaNotif === 'function') {
+                            rcAtualizaNotif();
+                        }
+                    });
+
+                }, function () {
+                    setTimeout(conectarTelaPainel, 5000);
+                });
+            }
+
+            // ---------- Audio unlock (para evitar NotAllowedError) ----------
+            let audioUnlocked = false;
+            function unlockAudioOnce(){
+                if (audioUnlocked) return;
+                audioUnlocked = true;
+                const a = new Audio('/sistema/img/door.mp3');
+                a.volume = 0.01;
+                a.play().then(()=>{ a.pause(); a.currentTime = 0; }).catch(()=>{});
+            }
+
+            function atualizarTelaComSenha(data) {
+                const senhaFormatada = data.senhaFormatada
+                    || ((data.tipo || '') + ' ' + (data.senha || ''));
+
+                document.getElementById('senhaFormatadaAtual').textContent = senhaFormatada;
+                document.getElementById('descricaoAtual').textContent      = data.descricao || '';
+                document.getElementById('guicheAtual').textContent         = data.guiche || '--';
+                document.getElementById('pacienteAtual').textContent       = data.paciente || '';
+
+                localStorage.setItem('painel_senha_atual', JSON.stringify(data));
+
+                // modal por 3s + mute/unmute do vídeo (somente layout video)
+                if (isVideoLayout) {
+                    showSenhaModal(data);
+                }
+
+                // Som de sino (se já desbloqueou)
+                if (audioUnlocked) {
+                    const audio = new Audio('/sistema/img/door.mp3');
+                    audio.play().catch(()=>{});
+                }
+            }
+
+            // Relógio
+            function atualizarRelogio() {
+                document.getElementById("relogio").textContent =
+                    new Date().toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit", second:"2-digit" });
+            }
+
+            window.onload = function () {
+                conectarTelaPainel();
+                atualizarRelogio();
+                setInterval(atualizarRelogio, 1000);
+
+                document.addEventListener("click", function () {
+                    unlockAudioOnce();
+                    if (!document.fullscreenElement) {
+                        document.documentElement.requestFullscreen();
+                    }
+                });
+            };
+        //]]>
+        </script>
+
+    </ui:define>
+</ui:composition>

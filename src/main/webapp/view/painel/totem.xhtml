@@ -1,0 +1,512 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/view/layout/layout.xhtml">
+
+    <ui:define name="title">Totem</ui:define>
+
+    <ui:define name="content">
+
+        <style>
+            :root {
+                --totem-primary: #0d6efd;
+                --totem-primary-soft: rgba(13, 110, 253, 0.12);
+                --totem-bg: #f4f6fb;
+                --totem-card-radius: 1.25rem;
+            }
+
+            body {
+                background: radial-gradient(circle at top left, #e3f2fd 0, #f4f6fb 45%, #eef1f7 100%);
+            }
+
+            .totem-container {
+                min-height: calc(100vh - 80px);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .totem-shell {
+                background: rgba(255, 255, 255, 0.96);
+                border-radius: 1.5rem;
+                box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
+                padding: 2.5rem;
+                border: 1px solid rgba(148, 163, 184, 0.15);
+            }
+
+            .totem-header {
+                border-bottom: 1px dashed rgba(148, 163, 184, 0.5);
+                padding-bottom: 1.25rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .totem-title {
+                font-size: 1.8rem;
+                font-weight: 700;
+                letter-spacing: 0.03rem;
+                color: #111827;
+            }
+
+            .totem-subtitle {
+                color: #6b7280;
+                font-size: 0.95rem;
+            }
+
+            .totem-pill {
+                font-size: 0.75rem;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                font-weight: 600;
+                color: #6b7280;
+            }
+
+            .card-main {
+                border: 0;
+                border-radius: var(--totem-card-radius);
+                transition: all .18s ease-in-out;
+                cursor: pointer;
+                background: #ffffff;
+                box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .card-main::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(135deg, rgba(13, 110, 253, 0.08), transparent);
+                opacity: 0;
+                transition: opacity .2s ease-in-out;
+            }
+
+            .card-main:hover::before {
+                opacity: 1;
+            }
+
+            .card-main:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
+            }
+
+            .card-main.active {
+                border: 2px solid var(--totem-primary);
+                box-shadow: 0 18px 42px rgba(37, 99, 235, 0.45);
+            }
+
+            .card-main-badge {
+                width: 3.2rem;
+                height: 3.2rem;
+                border-radius: 999px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.25rem;
+                font-weight: 700;
+                background: var(--totem-primary-soft);
+                color: var(--totem-primary);
+            }
+
+            .card-main-title {
+                font-weight: 600;
+                font-size: 1.05rem;
+                color: #111827;
+            }
+
+            .card-main-desc {
+                font-size: 0.85rem;
+                color: #6b7280;
+            }
+
+            .step-title {
+                text-transform: uppercase;
+                font-size: .78rem;
+                letter-spacing: .14rem;
+                color: #9ca3af;
+                font-weight: 700;
+            }
+
+            .big-btn {
+                padding: 1rem 1.25rem;
+                font-size: 1.05rem;
+                border-radius: 0.9rem;
+                font-weight: 600;
+            }
+
+            .big-btn .bi {
+                font-size: 1.2rem;
+            }
+
+            .big-btn-primary {
+                border-width: 2px;
+            }
+
+            .big-btn-priority {
+                border-width: 2px;
+            }
+
+            .ticket-result {
+                font-size: 1.4rem;
+                font-weight: 700;
+                color: #065f46;
+            }
+
+            .ticket-result small {
+                font-weight: 400;
+                color: #047857;
+            }
+
+            .alert-modern {
+                border-radius: 1rem;
+                border: 1px solid rgba(16, 185, 129, 0.25);
+                background: linear-gradient(135deg, #ecfdf5, #e0f2fe);
+            }
+
+            .no-subservicos {
+                border-radius: 1rem;
+                border-style: dashed;
+                border-width: 1px;
+                border-color: #d1d5db;
+                background: #f9fafb;
+                color: #6b7280;
+                font-size: 0.9rem;
+            }
+
+            @media (max-width: 992px) {
+                .totem-shell {
+                    padding: 1.5rem;
+                    border-radius: 1rem;
+                }
+
+                .totem-container {
+                    min-height: auto;
+                }
+            }
+
+            @media (max-width: 768px) {
+                .big-btn {
+                    font-size: 0.95rem;
+                    padding: 0.85rem 1rem;
+                }
+
+                .totem-title {
+                    font-size: 1.4rem;
+                }
+            }
+
+            /* ===== ÁREA DE IMPRESSÃO (TICKET 80mm) ===== */
+
+            .impressao {
+			    display: none; /* Oculta na visualização normal */
+			}
+			
+			
+			/* Impressão */
+			@media print {
+			
+			    /* Remove margens internas do navegador */
+			    @page {
+			        size: 80mm auto;
+			        margin: 0;
+			    }
+			
+			    /* Esconde tudo */
+			    body * {
+			        visibility: hidden !important;
+			        margin: 0 !important;
+			        padding: 0 !important;
+			    }
+			
+			    /* Garante que nada externo empurre conteúdo para página 2 */
+			    body, html {
+			        margin: 0 !important;
+			        padding: 0 !important;
+			        height: auto !important;
+			        overflow: hidden !important;
+			    }
+			
+			    /* Remove alturas impostas por containers */
+			    .container-fluid,
+			    .totem-container,
+			    .totem-shell,
+			    .row,
+			    .col-lg-7,
+			    .col-lg-5 {
+			        height: auto !important;
+			        min-height: 0 !important;
+			        max-height: none !important;
+			        overflow: hidden !important;
+			        box-shadow: none !important;
+			        border: none !important;
+			    }
+			
+			    /* Mostra APENAS o ticket */
+			    .impressao,
+			    .impressao * {
+			        visibility: visible !important;
+			    }
+			
+			    /* Ticket formatado */
+			    .impressao {
+			        display: block !important;
+			        position: absolute;
+			        top: 0;
+			        left: 0;
+			        width: 80mm;
+			        padding: 5mm;
+			        font-family: monospace !important;
+			    }
+			
+			    .impressao .titulo {
+			        text-align: center;
+			        font-size: 14px;
+			        margin-bottom: 5px;
+			    }
+			
+			    .impressao .senha {
+			        text-align: center;
+			        font-size: 26px;
+			        font-weight: bold;
+			        margin: 8px 0;
+			    }
+			
+			    .impressao .detalhe {
+			        text-align: center;
+			        font-size: 11px;
+			    }
+			}
+
+			}
+
+        </style>
+
+        <h:form id="formTotem">
+
+            <p:growl id="msgs" showDetail="true" life="3000"/>
+
+            <div class="container-fluid totem-container">
+                <div class="container">
+                    <div class="totem-shell">
+
+                        <div class="row g-4 mt-1">
+                            <!-- Coluna: Atendimentos Principais -->
+                            <div class="col-lg-5 border-end border-gray-200">
+                                <div class="mb-3">
+                                    <div class="step-title">Passo 1</div>
+                                    <h2 class="h5 mb-1">Escolha o tipo de serviço</h2>
+                                    <p class="text-muted mb-3">
+                                        Toque no atendimento principal que melhor representa o que você precisa.
+                                    </p>
+                                </div>
+
+                                <div class="row g-3">
+                                    <!-- Lista de serviços principais vindos do TotemController -->
+                                    <ui:repeat value="#{totemController.listServicos()}" var="s">
+                                        <div class="col-12">
+                                            <p:commandLink actionListener="#{totemController.selecionarServico(s)}"
+                                                           update="@form"
+                                                           process="@this"
+                                                           style="text-decoration:none;">
+
+                                                <div class="card card-main #{totemController.servicoSelecionado != null and totemController.servicoSelecionado.id == s.id ? 'active' : ''}">
+                                                    <div class="card-body d-flex align-items-center gap-3">
+                                                        <div class="card-main-badge">
+                                                            #{s.prefixo}
+                                                        </div>
+                                                        <div>
+                                                            <div class="card-main-title">
+                                                                #{s.nome}
+                                                            </div>
+                                                            <div class="card-main-desc">
+                                                                Toque para ver as opções desse atendimento.
+                                                            </div>
+                                                        </div>
+                                                        <div class="ms-auto d-none d-md-block">
+                                                            <i class="bi bi-chevron-right text-muted"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </p:commandLink>
+                                        </div>
+                                    </ui:repeat>
+                                </div>
+                            </div>
+
+                            <!-- Coluna: Sub-opções e tipos de senhas -->
+                            <div class="col-lg-7">
+                                <div class="mb-3">
+                                    <div class="step-title">Passo 2</div>
+                                    <h2 class="h5 mb-1">
+                                        Escolha o serviço dentro do atendimento
+                                    </h2>
+                                    <p class="text-muted mb-3">
+                                        <h:outputText
+                                                value="Você selecionou: #{totemController.servicoSelecionado.nome}. Agora escolha o serviço abaixo e o tipo de senha."
+                                                rendered="#{totemController.servicoSelecionado != null}"/>
+                                        <h:outputText
+                                                value="Primeiro selecione um atendimento ao lado para ver as opções disponíveis."
+                                                rendered="#{totemController.servicoSelecionado == null}"/>
+                                    </p>
+                                </div>
+
+                                <!-- Lista de sub-serviços -->
+                                <h:panelGroup id="listaSubservicos"
+                                              rendered="#{totemController.servicoSelecionado != null}">
+                                    <div class="row g-3">
+                                        <c:if test="#{empty totemController.servicoSelecionado.subServicos}">
+                                            <div class="col-12">
+                                                <div class="no-subservicos p-3 d-flex align-items-center gap-2">
+                                                    <i class="bi bi-exclamation-circle"></i>
+                                                    <span>
+                                                        Nenhum sub-serviço configurado para este atendimento no momento.
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </c:if>
+
+                                        <ui:repeat value="#{totemController.servicoSelecionado.subServicos}" var="sub">
+                                        	<h:panelGroup rendered="#{sub.ativo}">
+	                                            <div class="col-12">
+	                                                <div class="card border-0 shadow-sm"
+	                                                     style="border-radius: 1.1rem;">
+	                                                    <div class="card-body">
+	                                                        <div class="d-flex justify-content-between flex-wrap align-items-start gap-3">
+	                                                            <div class="me-3">
+	                                                                <h5 class="mb-1">
+	                                                                    #{sub.nome}
+	                                                                </h5>
+	                                                                <p class="text-muted mb-2">
+	                                                                    <h:outputText value="#{sub.descricao}"
+	                                                                                  rendered="#{not empty sub.descricao}"/>
+	                                                                </p>
+	                                                                <span class="badge bg-light text-dark border">
+	                                                                    Código: #{sub.prefixo}
+	                                                                </span>
+	                                                            </div>
+	
+	                                                            <div class="d-flex flex-column flex-sm-row gap-2 mt-2 mt-sm-0">
+	                                                                <!-- Botão Senha Normal (se habilitado no sub-serviço) -->
+	                                                                <p:commandButton value="Senha Normal"
+																	                 icon="bi bi-person"
+																	                 styleClass="btn btn-outline-primary big-btn big-btn-primary"
+																	                 rendered="#{sub.subSenhaNormal}"
+																	                 actionListener="#{totemController.gerarSenha(sub, 'N')}"
+																	                 update="formTotem:areaResultado formTotem:ticketImpressao formTotem:msgs"
+																	                 process="@this"
+																	                 oncomplete="setTimeout(function(){ window.print(); }, 200)"/>
+																	
+																	<p:commandButton value="Senha Prioritária"
+																	                 icon="bi bi-person-raised-hand"
+																	                 styleClass="btn btn-outline-danger big-btn big-btn-priority"
+																	                 rendered="#{sub.subSenhaPrioritaria}"
+																	                 actionListener="#{totemController.gerarSenha(sub, 'P')}"
+																	                 update="formTotem:areaResultado formTotem:ticketImpressao formTotem:msgs"
+																	                 process="@this"
+																	                 oncomplete="setTimeout(function(){ window.print(); }, 200)"/>
+	
+	
+	                                                                <!-- Caso nenhum tipo esteja configurado -->
+	                                                                <h:panelGroup
+	                                                                        rendered="#{not sub.subSenhaNormal and not sub.subSenhaPrioritaria}">
+	                                                                    <button class="btn btn-outline-secondary big-btn"
+	                                                                            disabled="disabled">
+	                                                                        Nenhum tipo de sub-senha configurado
+	                                                                    </button>
+	                                                                </h:panelGroup>
+	                                                            </div>
+	                                                        </div>
+	                                                    </div>
+	                                                </div>
+	                                            </div>
+                                            </h:panelGroup>
+                                        </ui:repeat>
+                                    </div>
+                                </h:panelGroup>
+
+                                <!-- Resultado da senha gerada (visual na tela) -->
+                                <h:panelGroup id="areaResultado">
+								    <ui:fragment rendered="#{not empty totemController.mensagemSenhaGerada}">
+								        <div class="mt-4">
+								            <div class="alert alert-modern d-flex align-items-center gap-3">
+								                <div>
+								                    <i class="bi bi-ticket-perforated fs-1 text-emerald-600"></i>
+								                </div>
+								                <div>
+								                    <div class="ticket-result mb-1">
+								                        #{totemController.mensagemSenhaGerada}
+								                    </div>
+								                    <small class="text-muted">
+								                        Sua senha foi registrada. Aguarde ser chamado no painel de senhas.
+								                    </small>
+								                </div>
+								            </div>
+								        </div>
+								    </ui:fragment>								
+								</h:panelGroup>
+                                
+                                <p:remoteCommand name="rcAtualizaNotif" process="@this" update=":formTotem:areaResultado" />
+
+
+                                <!-- TICKET PARA IMPRESSÃO (80mm) -->
+                                <h:panelGroup id="ticketImpressao" styleClass="impressao">
+								    <div class="titulo">
+								        <strong>ATENDIMENTO</strong>
+								    </div>
+								
+								    <div class="senha">
+								        #{totemController.mensagemSenhaGerada}
+								    </div>
+								
+								    <div class="detalhe">
+								        <h:outputText value="#{totemController.servicoSelecionado != null ? totemController.servicoSelecionado.nome : ''}"/>
+								        <br/>
+								        <h:outputText value="#{totemController.dataHoraAtualFormatada}"/>
+								    </div>
+								</h:panelGroup>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+        <!-- WebSocket para atualizar se algum serviço mudar -->
+        <script src="/sistema/bootstrap/sockjs.min.js"></script>
+        <script src="/sistema/bootstrap/stomp.min.js"></script>
+
+        <script type="text/javascript">
+		    var socketUpdate = new SockJS('/sistema/ws');
+		    var stompUpdate = Stomp.over(socketUpdate);
+		
+		    stompUpdate.debug = null; // opcional (remove logs)
+		
+		    stompUpdate.connect({}, function () {
+		
+		        console.log("Conectado ao WS!");
+		
+		        //  Atualiza a página ao mudar serviço
+		        stompUpdate.subscribe('/topic/updateServico', function (message) {
+		            console.log("updateServico recebido:", message.body);
+		            location.reload();
+		        });
+		
+		        //  Mostra alerta quando gerar senha
+		        stompUpdate.subscribe('/topic/senhaGeradaInfo', function (message) {
+		        	rcAtualizaNotif();
+		        });
+		
+		    }, function(error){
+		        console.error("Erro no WebSocket:", error);
+		    });
+		</script>
+
+
+    </ui:define>
+
+</ui:composition>

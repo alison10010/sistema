@@ -1,0 +1,163 @@
+html, body {
+     height: 100%;
+     margin: 0;
+     background: #f1f5f9; /* cinza bem claro */
+     color: #1e293b;      /* cinza escuro suave (excelente leitura) */
+     font-family: 'Segoe UI', sans-serif;
+     overflow: hidden;
+ }
+
+.rounded-pill {
+    margin-top: auto;
+}
+
+ /* TOPO */
+ .header-bar {
+     height: 80px;
+     background: #e2e8f0; /* cinza mais forte */
+     border-bottom: 2px solid #cbd5e1;
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     padding: 0 2rem;
+ }
+
+ .header-title {
+     font-size: 2rem;
+     font-weight: 700;
+     color: #334155;
+ }
+
+ /* LAYOUT PRINCIPAL */
+ .main-layout {
+     display: flex;
+     height: calc(100vh - 80px);
+ }
+
+ /* COLUNA ESQUERDA */
+.current-call {
+    flex: 2;
+    padding: 2rem 3rem;
+    border-right: 3px solid #cbd5e1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;      /* CENTRALIZA */
+    text-align: center;       /* texto centralizado */
+}
+
+.label {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #3b82f6;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.big-ticket {
+    font-size: 7rem;          /* um pouco maior */
+    font-weight: 900;
+    color: #2563eb;
+    margin-bottom: 2rem;
+}
+
+.patient-title {
+    font-size: 2.6rem;
+    font-weight: 600;
+    color: #475569;
+}
+
+.patient-name {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    color: #1e293b;
+}
+
+.info-row {
+    display: flex;
+    gap: 4rem;
+    margin-top: 1rem;
+}
+
+.info-block {
+    min-width: 160px;
+}
+
+.info-label {
+    display: block;
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #475569;
+}
+
+.info-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.info-value.guiche {
+    color: #ea580c;
+    font-weight: 800;
+}
+ .room-title {
+     font-size: 2.8rem;
+     font-weight: 600;
+     color: #ec7a09;
+ }
+
+ .room-value {
+     font-size: 5rem;
+     font-weight: 800;
+     color: #ea580c;
+ }
+
+ /* COLUNA DIREITA — CHAMADAS ANTERIORES */
+ .previous-calls {
+     flex: 1;
+     padding: 2rem;
+     overflow-y: auto;
+     background: #f8fafc;
+ }
+
+ .previous-title {
+     font-size: 2rem;
+     font-weight: 700;
+     margin-bottom: 1.5rem;
+     color: #64748b;
+     text-transform: uppercase;
+ }
+
+ .previous-item {
+     background: #ffffff;
+     border: 2px solid #d1d5db;
+     padding: 1rem;
+     border-radius: .7rem;
+     margin-bottom: .8rem;
+ }
+
+ .previous-item strong {
+     font-size: 1.6rem;
+     color: #475569;
+ }
+
+ .previous-meta {
+     font-size: 1.3rem;
+     color: #475569;
+ }
+
+ /* Scroll fino */
+ .previous-calls::-webkit-scrollbar {
+     width: 8px;
+ }
+ .previous-calls::-webkit-scrollbar-thumb {
+     background: #cbd5e1;
+     border-radius: 10px;
+ }
+
+ .header-title img {
+     height: 70px;
+     width: auto;
+ }
