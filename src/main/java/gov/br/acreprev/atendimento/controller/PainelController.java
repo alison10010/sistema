@@ -197,7 +197,8 @@ public class PainelController implements Serializable {
         
         enviarParaTela(senhaAtual, ultimoGuiche);
         
-            
+        messagingTemplate.convertAndSend("/topic/listEsperaPainel", "refresh");
+        messagingTemplate.convertAndSend("/topic/senhaGeradaInfo", "refresh");
                 
         messagingTemplate.convertAndSend("/topic/updateHistorico/"+ t.getCodigo(), "refresh");
         notificarPainelFila();        
