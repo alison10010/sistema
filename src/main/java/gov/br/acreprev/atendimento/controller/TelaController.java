@@ -3,6 +3,8 @@ package gov.br.acreprev.atendimento.controller;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,15 +47,44 @@ public class TelaController implements Serializable {
 
     // salvar (serve para novo e editar)
     public void salvar() {
+
+        if (tela.getLayout() == 1) { // layout vídeo
+            String url = tela.getVideoUrl();
+
+            if (url == null || url.isBlank()) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Informe a URL do vídeo do YouTube.", null));
+                return;
+            }
+
+            if (!isYoutubeUrl(url)) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "A URL informada não é do YouTube.", 
+                        "Use apenas links do youtube.com ou youtu.be"));
+                return;
+            }
+        }
+
         telaRepository.save(this.tela);
     }
-    
+
     public int layout(String cod) {
     	if (cod == null || cod.isBlank()) {
             return 0; // fallback: layout senha
         }
     	return telaRepository.layout(cod);
     }
+    
+    public boolean isYoutubeUrl(String url) {
+        if (url == null || url.isBlank()) return false;
+
+        String u = url.trim().toLowerCase();
+
+        return u.matches("^(https?://)?(www\\.)?(youtube\\.com|youtu\\.be)/.+$");
+    }
+
     
     // Video na Tela
     public String videoEmbedUrl(String codigo) {
