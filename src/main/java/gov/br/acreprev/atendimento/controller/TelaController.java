@@ -54,5 +54,61 @@ public class TelaController implements Serializable {
         }
     	return telaRepository.layout(cod);
     }
+    
+    // Video na Tela
+    public String videoEmbedUrl(String codigo) {
+        if (codigo == null || codigo.isBlank()) return "";
+
+        Tela t = telaRepository.findByCodigo(codigo.toUpperCase());
+        if (t == null || t.getVideoUrl() == null || t.getVideoUrl().isBlank()) return "";
+
+        // Aceita URL completa ou ID
+        String raw = t.getVideoUrl().trim();
+
+        // extrai ID se vier watch?v=... ou youtu.be/...
+        String id = extrairYoutubeId(raw);
+        if (id == null || id.isBlank()) return "";
+
+        // IMPORTANTE: em XHTML use &amp;
+        return "https://www.youtube-nocookie.com/embed/" + id
+                + "?enablejsapi=1&amp;autoplay=1&amp;controls=0&amp;rel=0&amp;modestbranding=1"
+                + "&amp;loop=1&amp;playlist=" + id;
+    }
+
+    private String extrairYoutubeId(String urlOuId) {
+        // se já for um ID
+        if (!urlOuId.contains("http") && urlOuId.length() >= 8) {
+            return urlOuId;
+        }
+
+        // exemplos:
+        // https://www.youtube.com/watch?v=VayOrXlERHs
+        // https://youtu.be/VayOrXlERHs
+        String u = urlOuId;
+
+        int idx = u.indexOf("v=");
+        if (idx >= 0) {
+            String v = u.substring(idx + 2);
+            int e = v.indexOf("&");
+            return (e > 0) ? v.substring(0, e) : v;
+        }
+
+        idx = u.indexOf("youtu.be/");
+        if (idx >= 0) {
+            String v = u.substring(idx + "youtu.be/".length());
+            int e = v.indexOf("?");
+            return (e > 0) ? v.substring(0, e) : v;
+        }
+
+        idx = u.indexOf("/embed/");
+        if (idx >= 0) {
+            String v = u.substring(idx + "/embed/".length());
+            int e = v.indexOf("?");
+            return (e > 0) ? v.substring(0, e) : v;
+        }
+
+        return null;
+    }
+
 }
 

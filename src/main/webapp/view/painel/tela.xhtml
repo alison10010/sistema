@@ -200,12 +200,24 @@
                     <!-- ESQUERDA: VÍDEO -->
                     <div class="video-panel">
                         <div class="video-frame">
-                            <iframe
-                                id="ytplayer"
-                                src="https://www.youtube-nocookie.com/embed/VayOrXlERHs?enablejsapi=1&amp;autoplay=1&amp;controls=0&amp;rel=0&amp;modestbranding=1&amp;loop=1&amp;playlist=VayOrXlERHs"
-                                allow="autoplay; encrypted-media; picture-in-picture"
-                                allowfullscreen="allowfullscreen">
-                            </iframe>
+                        <!-- define 1x o src do vídeo (não chama o método várias vezes) -->
+						<c:set var="videoSrc" value="#{telaController.videoEmbedUrl(codigoTela)}" />
+						
+						<!-- ESQUERDA: VÍDEO -->
+
+				        <c:choose>
+				            <c:when test="#{empty videoSrc}">
+				                <div style="padding:20px;text-align:center;color:#64748b;">
+				                    Nenhum vídeo configurado para esta tela.
+				                </div>
+				            </c:when>
+				
+				            <c:otherwise>
+				                <iframe id="ytplayer" src="#{videoSrc}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen="allowfullscreen">
+				                </iframe>
+				            </c:otherwise>
+				        </c:choose>
+	
                         </div>
                     </div>
 
