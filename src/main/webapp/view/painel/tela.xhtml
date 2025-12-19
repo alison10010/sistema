@@ -7,6 +7,11 @@
                 template="/view/layout/layout.xhtml">
 
     <ui:define name="title">Tela de Chamadas</ui:define>
+    
+    <f:metadata>
+	    <f:viewParam name="tela" value="#{telaViewController.codigoTela}" />
+	</f:metadata>
+	    
 
     <ui:define name="content">
 
@@ -178,12 +183,12 @@
          </style>
                 
         <!-- Código da tela vindo da URL -->
-        <c:set var="telaCodigo" value="#{empty param.tela ? '' : param.tela}" />
+        <c:set var="telaCodigo" value="#{telaViewController.codigoTela}" />
         <c:set var="codigoTela" value="#{param.tela}" />
 
         <!-- TOPO -->
         <div class="header-bar">
-            <div class="header-title">#{telaCodigo}</div>
+            <div class="header-title">#{telaViewController.codigoTela}</div>
             <div id="relogio" class="fs-4 text-secondary"></div>
         </div>
 
@@ -250,7 +255,7 @@
                                                  update=":formTela:filaHistorico" />
 
                                 <h:panelGroup id="filaHistorico">
-                                    <ui:repeat value="#{painelController.senhasAnteriores(telaCodigo)}" var="senhaFila">
+                                    <ui:repeat value="#{painelController.senhasAnteriores(telaViewController.codigoTela)}" var="senhaFila">
                                     <div class="previous-item">
                                         <strong>#{senhaFila.senhaVisual}</strong>
 
@@ -361,7 +366,8 @@
         <script type="text/javascript">
         //<![CDATA[
             let stompClientTela = null;
-            const telaCodigo = "#{telaCodigo}";
+            const telaCodigo = "#{telaViewController.codigoTela}";
+
             const isVideoLayout = #{telaController.layout(codigoTela) eq 1};
 
             // ---------- YouTube IFrame Player API (para mute/unmute) ----------
