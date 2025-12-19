@@ -141,5 +141,15 @@ public class TelaController implements Serializable {
         return null;
     }
 
+    
+    public String thema(String cod) {
+        if (cod == null || cod.isBlank()) return "LIGHT";
+
+        String t = telaRepository.thema(cod.toUpperCase());
+        if (t == null || t.isBlank()) return "LIGHT";
+
+        return t.trim().toUpperCase(); // "LIGHT" ou "DARK"
+    }
+    
 }
 

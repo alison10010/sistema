@@ -20,5 +20,8 @@ public interface TelaRepository extends JpaRepository<Tela, Long> {
 	int layout(@Param("codigo") String codigo);
 	
 	Tela findByCodigo(String codigo);
+	
+	@Query("select t.thema from Tela t where t.codigo = :codigo")
+    String thema(@Param("codigo") String codigo);
 
 }

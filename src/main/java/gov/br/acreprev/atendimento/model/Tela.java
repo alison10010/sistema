@@ -35,6 +35,8 @@ public class Tela {
     
     private String videoUrl;
     
+    private String thema;  // Light ou Dark
+    
     private int layout;     // 0 -> senha , 1 -> video
     
     @Column(name = "created_at")

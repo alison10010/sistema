@@ -328,6 +328,20 @@
 	                </div>
 	            </h:panelGroup>
 	        </h:panelGroup>
+	        
+	        <div class="mb-3">
+			    <label class="form-label fw-semibold">Tema</label>
+			
+			    <p:selectOneButton value="#{telaController.tela.thema}" styleClass="w-100">
+			        <f:selectItem itemLabel="Light" itemValue="LIGHT"/>
+			        <f:selectItem itemLabel="Dark" itemValue="DARK"/>
+			    </p:selectOneButton>
+			
+			    <div class="form-text">
+			        Define as cores da tela (TV/monitor).
+			    </div>
+			</div>
+				        
 	
 	        <!-- ATIVA -->
 	        <div style="display: flex;">	        	
