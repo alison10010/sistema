@@ -34,6 +34,12 @@ public class HomeController {
 		return "painel/tela";
 	}
 	
+	@GetMapping("/relatorio-periodo")
+	public String relatorioPeriodo() {
+		painelController.carregarResumo();
+		return "painel/relatorio-periodo";
+	}
+	
 	@GetMapping("/relatorio")
 	public String relatorio() {
 		painelController.carregarResumo();

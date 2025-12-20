@@ -1,0 +1,370 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/view/layout/layout.xhtml">
+
+    <ui:define name="title">Relatório Executivo</ui:define>
+
+    <ui:define name="content">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+
+        <style>
+		    :root {
+		        --primary: #2563eb;        /* azul institucional */
+		        --primary-soft: #e8efff;
+		        --success: #16a34a;        /* verde suave */
+		        --warning: #f59e0b;        /* laranja discreto */
+		        --border-soft: #dbe3f0;
+		
+		        --ink: #111827;
+		        --muted: #6b7280;
+		        --line: #e5e7eb;
+		        --bg: #f9fafb;
+		    }
+		
+		    body {
+		        font-family: 'Inter', sans-serif;
+		        background-color: var(--bg);
+		        color: var(--ink);
+		    }
+		
+		    /* ===== Impressão ===== */
+		    @page { size: A4 portrait; margin: 10mm; }
+		
+		    @media print {
+		        body { background: white !important; }
+		        .no-print { display: none !important; }
+		        .container { max-width: 100% !important; width: 100% !important; padding: 0 !important; margin: 0 !important; }
+		        .print-card { border: none !important; padding: 0 !important; box-shadow: none !important; }
+		
+		        /* tabelas organizadas no print */
+		        .table-modern { table-layout: fixed !important; width: 100% !important; }
+		        thead { display: table-header-group !important; }
+		        tr { break-inside: avoid !important; page-break-inside: avoid !important; }
+		        td, th { break-inside: avoid !important; page-break-inside: avoid !important; }
+		
+		        .table-modern thead th {
+		            background: #f3f4f6 !important;
+		            color: #000 !important;
+		        }
+		
+		        /* não “estourar” cores no papel */
+		        .stat-value { color: #000 !important; }
+		        .badge-success-soft, .badge-danger-soft, .badge-tipo-n, .badge-tipo-p {
+		            background: transparent !important;
+		            color: #000 !important;
+		            border: 1px solid #ddd !important;
+		        }
+		        .sub-service-tag {
+		            background: transparent !important;
+		            color: #000 !important;
+		            border: 1px solid #ddd !important;
+		        }
+		        code {
+		            background: transparent !important;
+		            color: #000 !important;
+		            border: 1px solid #ddd !important;
+		        }
+		    }
+		
+		    /* ===== Layout / Visual ===== */
+		    .report-header {
+		        border-bottom: 2px solid var(--primary);
+		        padding-bottom: 1rem;
+		        margin-bottom: 2rem;
+		    }
+		
+		    .stat-card {
+		        border: 1px solid var(--line);
+		        border-left: 4px solid var(--primary);
+		        padding: 1rem;
+		        border-radius: 10px;
+		        background: linear-gradient(180deg, #ffffff, #f8fafc);
+		    }
+		
+		    .stat-label {
+		        font-size: 0.75rem;
+		        text-transform: uppercase;
+		        letter-spacing: 0.05em;
+		        color: var(--muted);
+		        font-weight: 700;
+		    }
+		
+		    .stat-value {
+		        font-size: 1.6rem;
+		        font-weight: 800;
+		        color: var(--primary);
+		        line-height: 1.1;
+		    }
+		
+		    /* Tabela moderna */
+		    .table-modern {
+		        border-collapse: separate;
+		        border-spacing: 0;
+		        width: 100%;
+		        border: 1px solid var(--line);
+		        border-radius: 12px;
+		        overflow: hidden;
+		        background: #fff;
+		    }
+		
+		    .table-modern thead th {
+		        background: var(--primary-soft);
+		        color: #1e3a8a;
+		        font-size: 0.75rem;
+		        text-transform: uppercase;
+		        letter-spacing: 0.06em;
+		        padding: 10px;
+		        border-bottom: 1px solid var(--border-soft);
+		        white-space: nowrap;
+		    }
+		
+		    .table-modern td {
+		        padding: 8px 10px;
+		        border-bottom: 1px solid #f3f4f6;
+		        font-size: 0.88rem;
+		        vertical-align: middle;
+		    }
+		
+		    .table-modern tbody tr:hover td {
+		        background: #f8fafc;
+		    }
+		
+		    /* Prefixo */
+		    code {
+		        background: var(--primary-soft);
+		        color: var(--primary);
+		        padding: 2px 6px;
+		        border-radius: 6px;
+		        font-weight: 700;
+		    }
+		
+		    /* Chips de sub-serviço */
+		    .sub-service-tag {
+		        display: inline-block;
+		        background: var(--primary-soft);
+		        color: #1e3a8a;
+		        padding: 3px 10px;
+		        border-radius: 999px;
+		        font-size: 0.75rem;
+		        margin: 2px;
+		        border: 1px solid var(--border-soft);
+		        font-weight: 600;
+		    }
+		
+		    /* Badge SIM / NÃO */
+		    .badge-success-soft {
+		        background: #ecfdf5;
+		        color: var(--success);
+		        border: 1px solid #bbf7d0;
+		        padding: 3px 10px;
+		        border-radius: 999px;
+		        font-size: 0.72rem;
+		        font-weight: 800;
+		    }
+		
+		    .badge-danger-soft {
+		        background: #fef2f2;
+		        color: #dc2626;
+		        border: 1px solid #fecaca;
+		        padding: 3px 10px;
+		        border-radius: 999px;
+		        font-size: 0.72rem;
+		        font-weight: 800;
+		    }
+		
+		    /* Tipo N / P */
+		    .badge-tipo-n {
+		        background: var(--primary-soft);
+		        color: var(--primary);
+		        border: 1px solid var(--border-soft);
+		        padding: 3px 10px;
+		        border-radius: 8px;
+		        font-size: 0.72rem;
+		        font-weight: 800;
+		    }
+		
+		    .badge-tipo-p {
+		        background: #fff7ed;
+		        color: var(--warning);
+		        border: 1px solid #fed7aa;
+		        padding: 3px 10px;
+		        border-radius: 8px;
+		        font-size: 0.72rem;
+		        font-weight: 800;
+		    }
+		
+		    /* Pequenas utilidades */
+		    .text-muted { color: var(--muted) !important; }
+		</style>
+
+        <h:form id="formPrint">
+            <div class="container py-4">
+
+                <div class="d-flex justify-content-between align-items-center mb-4 no-print bg-white p-3 rounded shadow-sm">
+                    <div>
+                        <h1 class="h4 mb-0">Relatório de Atendimentos</h1>
+                        <p class="text-muted small mb-0">Prepare o documento para arquivamento ou distribuição.</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <p:commandButton value="Recarregar Dados" icon="pi pi-refresh"
+                                         action="#{relatorioController.carregar()}" update="@form"
+                                         styleClass="ui-button-outlined ui-button-secondary" />
+                        <button type="button" class="btn btn-dark px-4" onclick="window.print()">
+                            <i class="pi pi-print me-2"></i> Imprimir Relatório
+                        </button>
+                    </div>
+                </div>
+
+                <div class="print-card bg-white p-4 p-md-5 rounded shadow-sm border">
+
+                    <div class="report-header d-flex justify-content-between align-items-end">
+                        <div>
+                            <h2 class="fw-bold mb-1">RELATÓRIO DE ATENDIMENTOS</h2>
+                            <p class="mb-0 text-muted">
+                                Período de Referência: <strong>#{relatorioController.periodoLabel}</strong>
+                            </p>
+                        </div>
+                        <div class="text-end">
+                            <p class="small mb-0 text-muted text-uppercase">Gerado em</p>
+                            <p class="fw-bold mb-0">
+                                <h:outputText value="#{relatorioController.agoraDate}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                                </h:outputText>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- KPIs -->
+                    <div class="row g-3 mb-5">
+                        <div class="col-4">
+                            <div class="stat-card">
+                                <div class="stat-label">Total de Atendimentos</div>
+                                <div class="stat-value">#{relatorioController.totalAtendimentos}</div>
+                                <div class="small text-muted">
+                                    #{relatorioController.totalNormais} N | #{relatorioController.totalPrioritarias} P
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-card">
+                                <div class="stat-label">Serviços Ativos</div>
+                                <div class="stat-value">#{relatorioController.totalServicosAtivos}</div>
+                                <div class="small text-muted">
+                                    #{relatorioController.totalSubServicosAtivos} Sub-serviços
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-card">
+                                <div class="stat-label">Serviço Mais Requisitado</div>
+                                <div class="stat-value text-truncate" style="font-size: 1.1rem; padding-top: 0.5rem;">
+                                    #{relatorioController.topServicoNome}
+                                </div>
+                                <div class="small text-muted">Qtde: #{relatorioController.topServicoQtd}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Configuração de serviços -->
+                    <div class="mb-5">
+                        <h3 class="h6 fw-bold mb-3 text-uppercase border-start border-4 border-dark ps-2">
+                            Configuração de Serviços
+                        </h3>
+
+                        <table class="table-modern">
+                            <thead>
+                            <tr>
+                                <th style="width: 5%">ID</th>
+                                <th style="width: 25%">Serviço</th>
+                                <th style="width: 10%" class="text-center">Prefixo</th>
+                                <th style="width: 10%" class="text-center">Ativo</th>
+                                <th>Sub-serviços Detalhados</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <ui:repeat value="#{relatorioController.servicos}" var="s">
+                                <tr>
+                                    <td>#{s.id}</td>
+                                    <td class="fw-bold">#{s.nome}</td>
+                                    <td class="text-center"><code class="text-dark">#{s.prefixo}</code></td>
+                                    <td class="text-center">
+                                        <span class="#{s.ativo ? 'badge-success-soft' : 'badge-danger-soft'}">
+                                            #{s.ativo ? 'SIM' : 'NÃO'}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <ui:repeat value="#{s.subServicos}" var="sub">
+                                            <ui:fragment rendered="#{sub.ativo}">
+                                                <span class="sub-service-tag">
+                                                    <strong>#{sub.nome}</strong> (#{sub.prefixo})
+                                                </span>
+                                            </ui:fragment>
+                                        </ui:repeat>
+                                    </td>
+                                </tr>
+                            </ui:repeat>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Resumo consolidado -->
+                    <h3 class="h6 fw-bold mb-3 text-uppercase border-start border-4 border-dark ps-2">
+                        Consolidado por serviço e categoria
+                    </h3>
+
+                    <table class="table table-bordered table-summary">
+                        <thead>
+                        <tr>
+                            <th>Serviço / Sub-serviço</th>
+                            <th class="text-center" style="width:120px;">N</th>
+                            <th class="text-center" style="width:120px;">P</th>
+                            <th class="text-center" style="width:160px;">Total</th>
+                            <th class="text-center" style="width:140px;">% do Total</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <ui:repeat value="#{relatorioController.resumoAtendimentos}" var="r">
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold">#{r.subservico}</div>
+                                    <div class="small text-muted">#{r.servico}</div>
+                                </td>
+
+                                <td class="text-center fw-bold">#{r.totalN}</td>
+                                <td class="text-center fw-bold">#{r.totalP}</td>
+                                <td class="text-center fw-bold">#{r.total}</td>
+
+                                <td class="text-center">#{relatorioController.percentual(r.total)}%</td>
+                            </tr>
+                        </ui:repeat>
+
+                        <ui:fragment rendered="#{empty relatorioController.resumoAtendimentos}">
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-muted">
+                                    Nenhum dado consolidado para o período selecionado.
+                                </td>
+                            </tr>
+                        </ui:fragment>
+                        </tbody>
+
+                        <tfoot class="table-dark">
+                        <tr>
+                            <td class="text-end fw-bold">TOTAL GERAL:</td>
+                            <td class="text-center fw-bold">#{relatorioController.totalNormais}</td>
+                            <td class="text-center fw-bold">#{relatorioController.totalPrioritarias}</td>
+                            <td class="text-center fw-bold">#{relatorioController.totalAtendimentos}</td>
+                            <td class="text-center fw-bold">100%</td>
+                        </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
