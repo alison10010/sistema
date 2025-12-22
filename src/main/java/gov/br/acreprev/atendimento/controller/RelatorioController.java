@@ -78,12 +78,19 @@ public class RelatorioController implements Serializable {
     public void carregar() {
         this.agora = LocalDateTime.now();
 
-        // intervalo
+        // Se usuário não preencher, assume hoje
         LocalDate di = (dataInicio != null) ? dataInicio : LocalDate.now();
-        LocalDate df = (dataFim != null) ? dataFim : LocalDate.now();
+        LocalDate df = (dataFim != null) ? dataFim : di; // se não vier fim, usa início
 
-        LocalDateTime inicio = LocalDateTime.of(di, LocalTime.MIN);
-        LocalDateTime fim = LocalDateTime.of(df, LocalTime.MAX);
+        // Se vier invertido (início maior que fim), troca
+        if (di.isAfter(df)) {
+            LocalDate tmp = di;
+            di = df;
+            df = tmp;
+        }
+
+        LocalDateTime inicio = di.atStartOfDay();
+        LocalDateTime fim = df.atTime(LocalTime.MAX);
 
         // 1) Serviços
         this.servicos = servicoRepository.findAll();
@@ -92,26 +99,20 @@ public class RelatorioController implements Serializable {
 
         this.totalSubServicosAtivos = (int) servicos.stream()
                 .filter(Objects::nonNull)
-                .flatMap(s -> s.getSubServicos() == null ? Stream.<SubServico>empty() : s.getSubServicos().stream())
+                .flatMap(s -> s.getSubServicos() == null ? java.util.stream.Stream.<SubServico>empty() : s.getSubServicos().stream())
                 .filter(Objects::nonNull)
                 .filter(SubServico::isAtivo)
                 .count();
 
-        // 2) Resumo consolidado (1 linha por servico+subservico)
+        // 2) Resumo consolidado
         this.resumoAtendimentos = atendimentoRepository.resumoPorServicoESubNP(inicio, fim);
 
-        // 3) KPIs (vem do resumo -> não precisa buscar 10k linhas)
-        this.totalNormais = resumoAtendimentos.stream()
-                .mapToLong(r -> nvl(r.getTotalN()))
-                .sum();
-
-        this.totalPrioritarias = resumoAtendimentos.stream()
-                .mapToLong(r -> nvl(r.getTotalP()))
-                .sum();
-
+        // 3) KPIs
+        this.totalNormais = resumoAtendimentos.stream().mapToLong(r -> nvl(r.getTotalN())).sum();
+        this.totalPrioritarias = resumoAtendimentos.stream().mapToLong(r -> nvl(r.getTotalP())).sum();
         this.totalAtendimentos = totalNormais + totalPrioritarias;
 
-        // 4) Top serviço (somando total por "servico")
+        // 4) Top serviço
         Map<String, Long> porServico = resumoAtendimentos.stream()
                 .collect(Collectors.groupingBy(
                         r -> safe(r.getServico()),
@@ -129,7 +130,19 @@ public class RelatorioController implements Serializable {
             this.topServicoNome = "-";
             this.topServicoQtd = 0L;
         }
+
+        // Atualiza as datas (caso tenha invertido)
+        this.dataInicio = di;
+        this.dataFim = df;
     }
+    
+    public void hoje() {
+        this.dataInicio = LocalDate.now();
+        this.dataFim = LocalDate.now();
+        carregar();
+    }
+
+
 
     public String getPeriodoLabel() {
         if (dataInicio == null && dataFim == null) return "-";

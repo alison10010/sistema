@@ -205,19 +205,59 @@
             <div class="container py-4">
 
                 <div class="d-flex justify-content-between align-items-center mb-4 no-print bg-white p-3 rounded shadow-sm">
-                    <div>
-                        <h1 class="h4 mb-0">Relatório de Atendimentos</h1>
-                        <p class="text-muted small mb-0">Prepare o documento para arquivamento ou distribuição.</p>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <p:commandButton value="Recarregar Dados" icon="pi pi-refresh"
-                                         action="#{relatorioController.carregar()}" update="@form"
-                                         styleClass="ui-button-outlined ui-button-secondary" />
-                        <button type="button" class="btn btn-dark px-4" onclick="window.print()">
-                            <i class="pi pi-print me-2"></i> Imprimir Relatório
-                        </button>
-                    </div>
-                </div>
+			    <div>
+			        <h1 class="h4 mb-0">Relatório de Atendimentos</h1>
+			        <p class="text-muted small mb-0">Prepare o documento para arquivamento.</p>
+			    </div>
+			
+			    <!-- FILTRO DE PERÍODO -->
+				<div class="d-flex align-items-end gap-2 flex-wrap">
+				
+				    <div class="d-flex align-items-end gap-2">
+				        <div>
+				            <label class="form-label small mb-1 text-muted">Data início</label>
+				            <p:datePicker value="#{relatorioController.dataInicio}"
+				                          pattern="dd/MM/yyyy"
+				                          showIcon="true"
+				                          monthNavigator="true"
+				                          yearNavigator="true"
+				                          inputStyle="width:150px;height:32px;font-size:.875rem;"
+				                          styleClass="date-compact" />
+				        </div>
+				
+				        <div>
+				            <label class="form-label small mb-1 text-muted">Data fim</label>
+				            <p:datePicker value="#{relatorioController.dataFim}"
+				                          pattern="dd/MM/yyyy"
+				                          showIcon="true"
+				                          monthNavigator="true"
+				                          yearNavigator="true"
+				                          inputStyle="width:150px;height:32px;font-size:.875rem;"
+				                          styleClass="date-compact" />
+				        </div>
+				    </div>
+				
+				    <div class="d-flex gap-2 ms-2">
+				        <p:commandButton value="Aplicar"
+				                         icon="pi pi-filter"
+				                         action="#{relatorioController.carregar()}"
+				                         update="@form"
+				                         styleClass="btn btn-sm btn-primary" />
+				
+				        <p:commandButton value="Hoje"
+				                         icon="pi pi-calendar"
+				                         action="#{relatorioController.hoje()}"
+				                         update="@form"
+				                         styleClass="btn btn-sm btn-outline-secondary" />
+				
+				        <button type="button" class="btn btn-sm btn-dark px-3" onclick="window.print()">
+				            <i class="pi pi-print me-2"></i> Imprimir
+				        </button>
+				    </div>
+				</div>
+
+			</div>
+
 
                 <div class="print-card bg-white p-4 p-md-5 rounded shadow-sm border">
 
@@ -352,15 +392,29 @@
                         </ui:fragment>
                         </tbody>
 
-                        <tfoot class="table-dark">
-                        <tr>
-                            <td class="text-end fw-bold">TOTAL GERAL:</td>
-                            <td class="text-center fw-bold">#{relatorioController.totalNormais}</td>
-                            <td class="text-center fw-bold">#{relatorioController.totalPrioritarias}</td>
-                            <td class="text-center fw-bold">#{relatorioController.totalAtendimentos}</td>
-                            <td class="text-center fw-bold">100%</td>
-                        </tr>
-                        </tfoot>
+                        <tfoot class="table-modern">
+						    <tr style="
+						        background: #e8efff;
+						        border-top: 2px solid #e8efff;
+						    ">
+						        <td class="text-end fw-bold text-primary">TOTAL GERAL:</td>
+						
+						        <td class="text-center fw-bold text-dark">
+						            #{relatorioController.totalNormais}
+						        </td>
+						
+						        <td class="text-center fw-bold text-dark">
+						            #{relatorioController.totalPrioritarias}
+						        </td>
+						
+						        <td class="text-center fw-bold text-dark">
+						            #{relatorioController.totalAtendimentos}
+						        </td>
+						
+						        <td class="text-center fw-bold text-dark">100%</td>
+						    </tr>
+						</tfoot>
+
                     </table>
 
                 </div>
