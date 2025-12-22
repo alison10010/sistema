@@ -19,17 +19,17 @@
         <style>
         
         .light-table-body tr {
-    border-bottom: 1px solid #eef2f7;
-}
-
-.light-table-body tr:last-child {
-    border-bottom: none;
-}
-
-.light-table-body td {
-    padding-top: .75rem;
-    padding-bottom: .75rem;
-}
+			    border-bottom: 1px solid #eef2f7;
+			}
+			
+			.light-table-body tr:last-child {
+			    border-bottom: none;
+			}
+			
+			.light-table-body td {
+			    padding-top: .75rem;
+			    padding-bottom: .75rem;
+			}
         
 	        body {
 	            background: #f8fafc;
@@ -118,25 +118,7 @@
 	        .list-group-item.bg-transparent {
 	            background-color: transparent;
 	        }
-	
-	        @media print {
-	            body {
-	                background: #ffffff;
-	                color: #000000;
-	            }
-	            .navbar {
-	                background: #ffffff !important;
-	                color: #000 !important;
-	                box-shadow: none !important;
-	            }
-	            .navbar .navbar-brand,
-	            .navbar .navbar-text {
-	                color: #000 !important;
-	            }
-	            .card {
-	                box-shadow: none !important;
-	            }
-	        }
+		        
 	    </style>
 	    
         <!-- =============================== -->
@@ -165,9 +147,12 @@
 			             </span>
 			         </div>
 			         
-			        <button class="btn btn-outline-light btn-sm" onclick="window.print()">
-			            <i class="bi bi-printer me-1"></i> Imprimir
-			        </button>
+			        <button type="button" class="btn btn-outline-light btn-sm"
+					        onclick="window.open('/sistema/relatorio-periodo', '_blank')">
+					    <i class="bi bi-printer me-1"></i> Relatório
+					</button>
+
+
 			    </div>
 			</nav>
 			
