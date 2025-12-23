@@ -332,135 +332,135 @@
 		}
 		
 		/* ===========================
-   DARK THEME - TELA NORMAL
-   (histórico + chamada atual)
-   =========================== */
-
-.tela-root.theme-dark .main-layout{
-  display: grid;
-  grid-template-columns: 1.45fr 1fr; /* chamada maior, histórico menor */
-  gap: 18px;
-  padding: 18px;
-  height: calc(100vh - 70px);
-}
-
-/* cards principais */
-.tela-root.theme-dark .current-call,
-.tela-root.theme-dark .previous-calls{
-  background: linear-gradient(180deg, rgba(18,26,47,.92), rgba(12,18,36,.92)) !important;
-  border: 1px solid rgba(148,163,184,.14) !important;
-  border-radius: 18px;
-  box-shadow: 0 14px 50px rgba(0,0,0,.55);
-}
-
-/* CHAMADA ATUAL */
-.tela-root.theme-dark .current-call{
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  padding: 22px;
-  position: relative;
-  overflow:hidden;
-}
-
-.tela-root.theme-dark .current-call::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:
-    radial-gradient(700px 260px at 25% 10%, rgba(73,163,255,.18), transparent 55%),
-    radial-gradient(520px 200px at 85% 18%, rgba(138,99,255,.14), transparent 60%);
-}
-
-.tela-root.theme-dark .current-call .label{
-  color: rgba(226,232,240,.70) !important;
-  text-transform: uppercase;
-  letter-spacing: .20em;
-  font-weight: 800;
-  margin-bottom: 14px;
-}
-
-.tela-root.theme-dark .current-call .big-ticket{
-  font-size: 6rem !important;
-  font-weight: 950 !important;
-  line-height: 1;
-  margin-bottom: 18px;
-
-  background: linear-gradient(90deg, #49a3ff, #8a63ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 22px rgba(138,99,255,.25);
-}
-
-.tela-root.theme-dark .current-call .patient-title,
-.tela-root.theme-dark .current-call .room-title{
-  color: rgba(226,232,240,.60) !important;
-  font-weight: 700;
-  margin-top: 8px;
-}
-
-.tela-root.theme-dark .current-call .patient-name{
-  color: rgba(226,232,240,.85) !important;
-  font-weight: 700;
-}
-
-.tela-root.theme-dark .current-call .room-value{
-  font-size: 3.2rem !important;
-  font-weight: 900;
-  color: #e9efff !important;
-  text-shadow: 0 0 14px rgba(73,163,255,.18);
-}
-
-/* HISTÓRICO (NORMAL) */
-.tela-root.theme-dark .previous-calls{
-  padding: 18px;
-  overflow:hidden;
-}
-
-.tela-root.theme-dark .previous-title{
-  color: rgba(226,232,240,.85) !important;
-  font-weight: 900;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  margin-bottom: 12px;
-}
-
-/* lista rolável */
-.tela-root.theme-dark .previous-calls #filaHistorico{
-  overflow:auto;
-  padding-right: 6px;
-  max-height: calc(100vh - 70px - 90px); /* ajusta ao seu header */
-}
-.tela-root.theme-dark .previous-calls #filaHistorico::-webkit-scrollbar{
-  width: 10px;
-}
-.tela-root.theme-dark .previous-calls #filaHistorico::-webkit-scrollbar-thumb{
-  background: rgba(148,163,184,.18);
-  border-radius: 999px;
-}
-
-/* itens: vira card */
-.tela-root.theme-dark .previous-calls .previous-item{
-  background: rgba(255,255,255,.03);
-  border: 1px solid rgba(148,163,184,.14);
-  border-radius: 14px;
-  padding: 12px 14px;
-  margin-bottom: 10px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.25);
-}
-
-.tela-root.theme-dark .previous-calls .previous-item strong{
-  color: #e8eefc !important;
-  font-size: 1.55rem;
-}
-
-.tela-root.theme-dark .previous-calls .previous-meta{
-  color: rgba(226,232,240,.65) !important;
-  font-weight: 600;
-}
+			   DARK THEME - TELA NORMAL
+			   (histórico + chamada atual)
+			   =========================== */
+			
+			.tela-root.theme-dark .main-layout{
+			  display: grid;
+			  grid-template-columns: 1.45fr 1fr; /* chamada maior, histórico menor */
+			  gap: 18px;
+			  padding: 18px;
+			  height: calc(100vh - 70px);
+			}
+			
+			/* cards principais */
+			.tela-root.theme-dark .current-call,
+			.tela-root.theme-dark .previous-calls{
+			  background: linear-gradient(180deg, rgba(18,26,47,.92), rgba(12,18,36,.92)) !important;
+			  border: 1px solid rgba(148,163,184,.14) !important;
+			  border-radius: 18px;
+			  box-shadow: 0 14px 50px rgba(0,0,0,.55);
+			}
+			
+			/* CHAMADA ATUAL */
+			.tela-root.theme-dark .current-call{
+			  display:flex;
+			  flex-direction:column;
+			  justify-content:center;
+			  align-items:center;
+			  text-align:center;
+			  padding: 22px;
+			  position: relative;
+			  overflow:hidden;
+			}
+			
+			.tela-root.theme-dark .current-call::before{
+			  content:"";
+			  position:absolute;
+			  inset:0;
+			  pointer-events:none;
+			  background:
+			    radial-gradient(700px 260px at 25% 10%, rgba(73,163,255,.18), transparent 55%),
+			    radial-gradient(520px 200px at 85% 18%, rgba(138,99,255,.14), transparent 60%);
+			}
+			
+			.tela-root.theme-dark .current-call .label{
+			  color: rgba(226,232,240,.70) !important;
+			  text-transform: uppercase;
+			  letter-spacing: .20em;
+			  font-weight: 800;
+			  margin-bottom: 14px;
+			}
+			
+			.tela-root.theme-dark .current-call .big-ticket{
+			  font-size: 6rem !important;
+			  font-weight: 950 !important;
+			  line-height: 1;
+			  margin-bottom: 18px;
+			
+			  background: linear-gradient(90deg, #49a3ff, #8a63ff);
+			  -webkit-background-clip: text;
+			  -webkit-text-fill-color: transparent;
+			  text-shadow: 0 0 22px rgba(138,99,255,.25);
+			}
+			
+			.tela-root.theme-dark .current-call .patient-title,
+			.tela-root.theme-dark .current-call .room-title{
+			  color: rgba(226,232,240,.60) !important;
+			  font-weight: 700;
+			  margin-top: 8px;
+			}
+			
+			.tela-root.theme-dark .current-call .patient-name{
+			  color: rgba(226,232,240,.85) !important;
+			  font-weight: 700;
+			}
+			
+			.tela-root.theme-dark .current-call .room-value{
+			  font-size: 3.2rem !important;
+			  font-weight: 900;
+			  color: #e9efff !important;
+			  text-shadow: 0 0 14px rgba(73,163,255,.18);
+			}
+			
+			/* HISTÓRICO (NORMAL) */
+			.tela-root.theme-dark .previous-calls{
+			  padding: 18px;
+			  overflow:hidden;
+			}
+			
+			.tela-root.theme-dark .previous-title{
+			  color: rgba(226,232,240,.85) !important;
+			  font-weight: 900;
+			  letter-spacing: .06em;
+			  text-transform: uppercase;
+			  margin-bottom: 12px;
+			}
+			
+			/* lista rolável */
+			.tela-root.theme-dark .previous-calls #filaHistorico{
+			  overflow:auto;
+			  padding-right: 6px;
+			  max-height: calc(100vh - 70px - 90px); /* ajusta ao seu header */
+			}
+			.tela-root.theme-dark .previous-calls #filaHistorico::-webkit-scrollbar{
+			  width: 10px;
+			}
+			.tela-root.theme-dark .previous-calls #filaHistorico::-webkit-scrollbar-thumb{
+			  background: rgba(148,163,184,.18);
+			  border-radius: 999px;
+			}
+			
+			/* itens: vira card */
+			.tela-root.theme-dark .previous-calls .previous-item{
+			  background: rgba(255,255,255,.03);
+			  border: 1px solid rgba(148,163,184,.14);
+			  border-radius: 14px;
+			  padding: 12px 14px;
+			  margin-bottom: 10px;
+			  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+			}
+			
+			.tela-root.theme-dark .previous-calls .previous-item strong{
+			  color: #e8eefc !important;
+			  font-size: 1.55rem;
+			}
+			
+			.tela-root.theme-dark .previous-calls .previous-meta{
+			  color: rgba(226,232,240,.65) !important;
+			  font-weight: 600;
+			}
 
 			        
         </style>
