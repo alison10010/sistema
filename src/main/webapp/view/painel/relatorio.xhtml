@@ -4,7 +4,7 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:c="http://java.sun.com/jsp/jstl/core"
                 xmlns:p="http://primefaces.org/ui"
-                template="/view/layout/layout.xhtml">
+                template="/view/layout/admin.xhtml">
 
     <ui:define name="title">Relatório</ui:define>
 
@@ -18,8 +18,23 @@
         <!-- =============================== -->
         <style>
         
-        .light-table-body tr {
-			    border-bottom: 1px solid #eef2f7;
+	        :root{
+			      --bg: #f6f8fb;
+			      --card: #ffffff;
+			      --border: rgba(15, 23, 42, .10);
+			      --text: #0f172a;
+			      --muted: #64748b;
+			    }
+			
+			    body{
+			      background: radial-gradient(1200px 500px at 20% 0%, rgba(13,110,253,.10), transparent 55%),
+			                  radial-gradient(900px 400px at 85% 10%, rgba(220,53,69,.08), transparent 60%),
+			                  var(--bg);
+			      color: var(--text);
+			    }
+	        
+	        .light-table-body tr {
+				    border-bottom: 1px solid #eef2f7;
 			}
 			
 			.light-table-body tr:last-child {
@@ -31,10 +46,7 @@
 			    padding-bottom: .75rem;
 			}
         
-	        body {
-	            background: #f8fafc;
-	            color: #111827;
-	        }
+	   
 	
 	        .navbar {
 	            background: linear-gradient(90deg, #2563eb, #60a5fa);
@@ -125,43 +137,10 @@
         <!--           FORMULARIO            -->
         <!-- =============================== -->
 
-        <h:form id="formPainel">
+        <h:form id="formPainel" style="margin-top:3rem">
         
         	<p:remoteCommand name="rcAtualizaNotif" actionListener="#{painelController.carregarResumo()}" process="@this" update="formPainel"  oncomplete="renderChartServicos();" />
 
-            <nav class="navbar navbar-expand-lg mb-4">
-			    <div class="container-fluid py-2">
-			        <div class="d-flex flex-column flex-md-row gap-1 align-items-md-center">
-			            <span class="navbar-brand fw-semibold text-white mb-0">
-			                <i class="bi bi-speedometer2 me-1"></i> Painel de Atendimento
-			            </span>
-			            <span class="navbar-text small">
-			                Relatório sintético de senhas, atendimentos e serviços
-			            </span>
-			        </div>
-			        
-			        <div class="col-md-4 text-md-end mt-3 mt-md-0">
-			             <span class="badge rounded-pill text-bg-light px-3 py-2">
-			                 <i class="bi bi-info-circle me-1 text-primary"></i>
-			                 Atualização em tempo real
-			             </span>
-			         </div>
-			         
-			         <button type="button"
-					        class="btn btn-outline-light btn-sm"
-					        onclick="window.location.href='/sistema/dashboard'">
-					   <i class="bi bi-speedometer2 me-1"></i> Painel
-					</button>
-
-			         
-			        <button type="button" class="btn btn-outline-light btn-sm"
-					        onclick="window.open('/sistema/relatorio-periodo', '_blank')">
-					    <i class="bi bi-bar-chart-line me-1"></i> Relatório
-					</button>
-
-			    </div>
-			</nav>
-			
 			<div class="container mb-5">			
 			    <!-- Linha de Cards com Totais -->
 			    <div class="row g-3 mb-4">
@@ -342,7 +321,6 @@
 			            </div>
 			            <div class="text-md-end">
 			                Usuário: <strong>Alison</strong><br />
-			                Ambiente: <span class="text-primary">DESENVOLVIMENTO</span>
 			            </div>
 			        </div>
 			    </div>
