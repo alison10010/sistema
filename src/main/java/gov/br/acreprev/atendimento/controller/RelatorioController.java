@@ -156,8 +156,8 @@ public class RelatorioController implements Serializable {
     }
 
     public Date getAgoraDate() {
-        if (agora == null) agora = LocalDateTime.now();
-        return Date.from(agora.atZone(ZoneId.systemDefault()).toInstant());
+        LocalDateTime agora = LocalDateTime.now(ZoneId.of("America/Rio_Branco"));
+        return Date.from(agora.atZone(ZoneId.of("America/Rio_Branco")).toInstant());
     }
 
     public String percentual(Long subtotal) {

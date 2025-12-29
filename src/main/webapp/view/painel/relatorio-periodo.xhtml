@@ -263,7 +263,7 @@
 
                     <div class="report-header d-flex justify-content-between align-items-end">
                         <div>
-                            <h3 class="fw-bold mb-1">RELATÓRIO DE ATENDIMENTOS</h3>
+                            <h5 class="fw-bold mb-1">RELATÓRIO DE ATENDIMENTOS</h5>
                             <p class="mb-0 text-muted">
                                 Período de Referência: <strong>#{relatorioController.periodoLabel}</strong>
                             </p>
@@ -272,7 +272,7 @@
                             <p class="small mb-0 text-muted text-uppercase">Gerado em</p>
                             <p class="fw-bold mb-0">
                                 <h:outputText value="#{relatorioController.agoraDate}">
-                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="America/Rio_Branco"/>
                                 </h:outputText>
                             </p>
                         </div>
