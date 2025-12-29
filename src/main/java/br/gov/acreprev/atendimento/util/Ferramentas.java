@@ -2,6 +2,7 @@ package br.gov.acreprev.atendimento.util;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.text.Normalizer;
 import java.util.regex.Pattern;
 
@@ -26,5 +27,13 @@ public class Ferramentas {
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(nfdNormalizedString).replaceAll("");
     }
+	
+	public static String geraCodTela() {
+	    return Long.toString(
+	            Math.abs(new SecureRandom().nextLong()), 36
+	    ).toUpperCase().substring(0, 5);
+	}
+
+
 
 }

@@ -198,7 +198,7 @@
 	
 	                                <!-- EDIT -->
 	                                <p:commandLink styleClass="edit-btn"
-	                                               title="Editar"
+	                                               title="Editar" rendered="#{t.nome ne 'PADRAO'}"
 	                                               actionListener="#{telaController.editarTela(t)}"
 	                                               process="@this"
 	                                               update=":formDlgTela"
@@ -268,23 +268,11 @@
 	            <label class="form-label fw-semibold">Nome</label>
 	            <p:inputText value="#{telaController.tela.nome}"
 	                         styleClass="form-control"
-	                         placeholder="Ex: Recepção"
+	                         placeholder="Ex: Recepcao"
 	                         required="true"
-	                         requiredMessage="Informe o nome da tela."/>
+	                         requiredMessage="Informe o nome da tela." oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '')"/>
 	        </div>
 	
-	        <!-- CÓDIGO -->
-	        <div class="mb-3">
-	            <label class="form-label fw-semibold">Código (usado na URL)</label>
-	            <p:inputText value="#{telaController.tela.codigo}"
-	                         styleClass="form-control"
-	                         placeholder="Ex: TELA_1"
-	                         required="true"
-	                         requiredMessage="Informe o código da tela."/>
-	            <div class="form-text">
-	                Fica assim: <code>/sistema/tela?tela=CODIGO</code>
-	            </div>
-	        </div>
 	
 	        <!-- LAYOUT -->
 	        <div class="mb-3">
@@ -309,9 +297,9 @@
 	                    <label class="form-label fw-semibold">URL do vídeo</label>
 	                    <p:inputText value="#{telaController.tela.videoUrl}"
 	                                 styleClass="form-control"
-	                                 placeholder="Ex: https://exemplo.com/video.mp4 ou link embutível"/>
+	                                 placeholder="Apenas YouTube"/>
 	                    <div class="form-text">
-	                        Dica: alguns sites (ex.: YouTube) bloqueiam iframe. Prefira link “embed” ou mp4.
+	                        Dica: Apenas link de video no YouTube.
 	                    </div>
 	                </div>
 	            </h:panelGroup>

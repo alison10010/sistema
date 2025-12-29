@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.annotation.SessionScope;
 
+import br.gov.acreprev.atendimento.util.Ferramentas;
 import gov.br.acreprev.atendimento.model.Tela;
 import gov.br.acreprev.atendimento.repository.TelaRepository;
 import lombok.Getter;
@@ -37,7 +38,8 @@ public class TelaController implements Serializable {
     public void novaTela() {
         this.tela = new Tela();
         // opcional: defaults
-        // this.tela.setAtiva(true);
+        this.tela.setAtiva(true);
+        this.tela.setThema("LIGHT");
     }
 
     // abrir dialog para EDITAR
@@ -66,7 +68,11 @@ public class TelaController implements Serializable {
                 return;
             }
         }
-
+        
+        if(tela.getCodigo() == null || tela.getCodigo().isBlank()) {
+        	tela.setCodigo(Ferramentas.geraCodTela());
+        }        
+        
         telaRepository.save(this.tela);
     }
 

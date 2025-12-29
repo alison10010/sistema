@@ -23,5 +23,7 @@ public interface TelaRepository extends JpaRepository<Tela, Long> {
 	
 	@Query("select t.thema from Tela t where t.codigo = :codigo")
     String thema(@Param("codigo") String codigo);
+	
+	boolean existsByNomeIgnoreCase(String nome);
 
 }
