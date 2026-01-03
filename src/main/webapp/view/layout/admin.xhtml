@@ -106,7 +106,7 @@
 	    .nav-section-title{
 	      margin: 16px 10px 8px;
 	      font-size: .78rem;
-	      font-weight: 800;
+	      font-weight: 500;
 	      letter-spacing: .08em;
 	      text-transform: uppercase;
 	      color: rgba(15,23,42,.45);
@@ -120,14 +120,14 @@
 	      border-radius: 14px;
 	      color: rgba(15,23,42,.72);
 	      text-decoration: none;
-	      font-weight: 700;
+	      font-weight: 500;
 	      transition: background .15s ease, color .15s ease, transform .15s ease;
 	    }
-	    .side-link i{ color: rgba(15,23,42,.55); }
+	    .side-link i{ color: rgba(47,107,255,.85); }
 	    .side-link:hover{
-	      background: rgba(255,255,255,.85);
 	      color: rgba(15,23,42,.92);
-	      transform: translateY(-1px);
+		    border-color: rgba(15,23,42,.08);
+		    background: rgba(255,255,255,.65);
 	    }
 	    .side-link.active{
 	      background: linear-gradient(135deg, rgba(47,107,255,.14), rgba(124,58,237,.10));
@@ -336,6 +336,39 @@
 	      .sidebar{ display:none; }
 	      .sidebar-toggle{ display:inline-flex; }
 	    }
+	    
+	    /*ICON NO MENU*/
+	    .brand-horizontal{
+		  display: flex;
+		  align-items: center;
+		  gap: 12px;
+		  padding: 0 !important;
+		}
+		
+		/* logo livre */
+		.brand-logo-inline{
+		  width: 50px;        /* tamanho ideal para sidebar */
+		  height: 86px;
+		  object-fit: contain;
+		  display: block;
+		}
+		
+		/* texto */
+		.brand-text{
+		  display: flex;
+		  flex-direction: column;
+		}
+		
+		.brand-title{
+		  font-weight: 600;
+		  letter-spacing: -.02em;
+		  line-height: 1.1;
+		}
+		
+		.brand-sub{
+		  font-size: .88rem;
+		  color: rgba(15,23,42,.60);
+		}
 	  </style>
 </h:head>
 
@@ -345,13 +378,17 @@
 
     <!-- ===== Sidebar (Desktop) ===== -->
     <aside class="sidebar d-none d-lg-block">
-      <div class="brand">
-        <div class="brand-badge"><i class="bi bi-layers-half"></i></div>
-        <div>
-          <div class="brand-title">Admin</div>
-          <div class="brand-sub">Gestão de Senhas</div>
-        </div>
-      </div>
+     
+     <div class="brand brand-horizontal">
+	    <img src="/sistema/img/logo.png"
+	         alt="Gestão de Senhas"
+	         class="brand-logo-inline"/>
+	
+	    <div class="brand-text">
+	        <div class="brand-title">Admin</div>
+	        <div class="brand-sub">Gestão de Senhas</div>
+	    </div>
+	</div>
 
       <div class="nav-section-title">Gestão</div>
       	<a class="side-link #{view.viewId eq '/view/painel/relatorio.xhtml' ? 'active' : ''}" href="/sistema/relatorio"><i class="bi bi-speedometer2"></i> Dashboard</a>
