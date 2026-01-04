@@ -1,4 +1,4 @@
-package br.gov.acreprev.atendimento.util;
+package gov.br.acreprev.atendimento.util;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;

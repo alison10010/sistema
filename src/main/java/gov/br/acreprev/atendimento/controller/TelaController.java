@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.annotation.SessionScope;
 
-import br.gov.acreprev.atendimento.util.Ferramentas;
 import gov.br.acreprev.atendimento.model.Tela;
 import gov.br.acreprev.atendimento.repository.TelaRepository;
+import gov.br.acreprev.atendimento.util.Ferramentas;
 import lombok.Getter;
 import lombok.Setter;
 

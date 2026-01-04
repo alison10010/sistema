@@ -4,9 +4,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.gov.acreprev.atendimento.util.Ferramentas;
 import gov.br.acreprev.atendimento.model.Tela;
 import gov.br.acreprev.atendimento.repository.TelaRepository;
+import gov.br.acreprev.atendimento.util.Ferramentas;
 
 @Component
 public class TelaPadraoInitializer implements CommandLineRunner {

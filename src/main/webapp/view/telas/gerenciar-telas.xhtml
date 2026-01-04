@@ -221,7 +221,7 @@
 	                                    <button type="button"
 										        class="btn btn-sm btn-outline-secondary rounded-pill"
 										        onclick="copyText('/sistema/tela?tela=#{t.codigo}', this)">
-										    <i class="bi bi-copy"></i> Copiar
+										  <i class="bi bi-copy"></i> Copiar
 										</button>
 
 	                                </div>
@@ -356,44 +356,66 @@
 	</div>
 	
 	<script>
-    	//<![CDATA[
-	    function copyText(text, btn) {
+	  //<![CDATA[
+	  function copyText(pathOrText, btn) {
 	
-	        navigator.clipboard.writeText(text).then(() => {
+	      // Se vier algo como "/sistema/..." transforma em URL completa
+	      // Se já vier "http..." copia como está
+	      const textToCopy = (pathOrText && pathOrText.startsWith("/"))
+	          ? (window.location.origin + pathOrText)
+	          : pathOrText;
 	
-	            // pega o ícone dentro do botão clicado
-	            const icon = btn.querySelector("i");
+	      const doSuccessUI = () => {
+	          const icon = btn.querySelector("i");
 	
-	            if (icon) {
-	                // troca copy -> check
-	                icon.classList.remove("bi-copy");
-	                icon.classList.add("bi-check2");
+	          if (icon) {
+	              icon.classList.remove("bi-copy");
+	              icon.classList.add("bi-check2");
+	          }
 	
-	                // opcional: muda cor
-	                btn.classList.remove("btn-outline-secondary");
-	                btn.classList.add("btn-outline-success");
-	            }
+	          btn.classList.remove("btn-outline-secondary");
+	          btn.classList.add("btn-outline-success");
 	
-	            // Toast (se existir)
-	            const el = document.getElementById('toastCopy');
-	            if (el && window.bootstrap) {
-	                const t = new bootstrap.Toast(el);
-	                t.show();
-	            }
+	          const el = document.getElementById("toastCopy");
+	          if (el && window.bootstrap) {
+	              new bootstrap.Toast(el).show();
+	          }
 	
-	            // volta ao normal após 2 segundos
-	            setTimeout(() => {
-	                if (icon) {
-	                    icon.classList.remove("bi-check2");
-	                    icon.classList.add("bi-copy");
-	                }
-	                btn.classList.remove("btn-outline-success");
-	                btn.classList.add("btn-outline-secondary");
-	            }, 2000);
-	        });
-	    }
-	    //]]>
+	          setTimeout(() => {
+	              if (icon) {
+	                  icon.classList.remove("bi-check2");
+	                  icon.classList.add("bi-copy");
+	              }
+	              btn.classList.remove("btn-outline-success");
+	              btn.classList.add("btn-outline-secondary");
+	          }, 2000);
+	      };
+	
+	      const doFallbackCopy = (txt) => {
+	          const temp = document.createElement("textarea");
+	          temp.value = txt;
+	          temp.setAttribute("readonly", "");
+	          temp.style.position = "fixed";
+	          temp.style.top = "-9999px";
+	          document.body.appendChild(temp);
+	          temp.select();
+	          document.execCommand("copy");
+	          document.body.removeChild(temp);
+	          doSuccessUI();
+	      };
+	
+	      // Clipboard API (HTTPS/localhost). Se falhar, usa fallback.
+	      if (navigator.clipboard && window.isSecureContext) {
+	          navigator.clipboard.writeText(textToCopy)
+	              .then(doSuccessUI)
+	              .catch(() => doFallbackCopy(textToCopy));
+	      } else {
+	          doFallbackCopy(textToCopy);
+	      }
+	  }
+	  //]]>
 	</script>
+
 
 
 

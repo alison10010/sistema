@@ -1,4 +1,4 @@
-package br.gov.acreprev.atendimento.util;
+package gov.br.acreprev.atendimento.util;
 
 import java.io.Serializable;
 

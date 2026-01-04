@@ -13,6 +13,11 @@ public class HomeController {
 	@Autowired
 	private TotemController totemController;
 	
+	@GetMapping("/login")
+	public String login() {
+		return "login/index"; 
+	}
+	
 	@GetMapping("/")
 	public String home() {
 		totemController.init();
