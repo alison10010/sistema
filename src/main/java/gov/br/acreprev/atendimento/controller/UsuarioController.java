@@ -57,9 +57,9 @@ public class UsuarioController implements Serializable {
         try {
 
             // Verifica se já existe usuário com o mesmo username
-            Optional<Usuario> existente = usuarioRepository.findByUsername(usuario.getUsername());
+            Optional<Usuario> existente = usuarioRepository.findByUsername(usuario.getEmail().toLowerCase());
             if (existente.isPresent()) {
-                Mensagens.aviso("Nome de usuário já existe!", "");
+                Mensagens.aviso("Usuário já existe!", "");
                 return;
             }
 
@@ -67,18 +67,19 @@ public class UsuarioController implements Serializable {
             if (usuario.getServico() == null || usuario.getServico().isEmpty()) {
                 Mensagens.aviso("Selecione ao menos um serviço para o usuário.", "");
                 return;
-            }
-
-            // Codifica a senha antes de salvar
-            if (usuario.getPassword() != null && !usuario.getPassword().isEmpty()) {
-                usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-            }
+            }            
+            
+            usuario.setAcesso("NORMAL");
+            usuario.setEmaiConfirmado(true);
             
             int senhaAleatoria = Ferramentas.randomDeDataHora();
 			String senhaEmString = String.valueOf(senhaAleatoria);
 			
             EmailSenha emailSenha = new EmailSenha();
 			String mail = usuario.getEmail();
+			
+            // Codifica a senha antes de salvar
+			usuario.setPassword(passwordEncoder.encode(senhaEmString));
 			
 			 // envia Mensagem Assincrona sem esperar pela confirmação do envio do e-mail
 	        new Thread(() -> {
