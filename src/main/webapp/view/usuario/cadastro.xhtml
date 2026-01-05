@@ -29,7 +29,7 @@
             .user-title{
                 font-size: 1.4rem;
                 font-weight: 700;
-                color: #0f172a;
+                color: rgba(15,23,42,.72)
             }
 
             .user-subtitle{
@@ -181,12 +181,12 @@
 			        <div class="user-actions">
 			            <p:commandButton value="Cancelar"
 			                             type="button"
-			                             styleClass="btn btn-sm btn-outline-secondary"
+			                             styleClass="btn btn-light rounded-pill"
 			                             onclick="window.history.back();"/>
 			
 			            <p:commandButton value="Salvar usuário"
 			                             icon="pi pi-save"
-			                             styleClass="btn btn-sm btn-primary"
+			                             styleClass="btn btn-sm btn-outline-primary rounded-pill"
 			                             process="@form"
 			                             update="formUsuario msgs"
 			                             actionListener="#{usuarioController.insertUser}"/>
