@@ -1,0 +1,201 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                template="/view/layout/admin.xhtml">
+
+    <ui:define name="title">Cadastro de Usuário</ui:define>
+
+    <ui:define name="content">
+
+        <style>
+            .user-shell{
+                background: #ffffff;
+                border-radius: 1.25rem;
+                padding: 1.75rem 2rem;
+                box-shadow: 0 12px 30px rgba(15,23,42,.08);
+                border: 1px solid rgba(148,163,184,.35);
+                margin-bottom: 1.5rem;
+            }
+
+            .user-header{
+                border-bottom: 1px dashed rgba(148,163,184,.6);
+                padding-bottom: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .user-title{
+                font-size: 1.4rem;
+                font-weight: 700;
+                color: #0f172a;
+            }
+
+            .user-subtitle{
+                font-size: .9rem;
+                color: #6b7280;
+            }
+
+            .chip-required{
+                display: inline-flex;
+                align-items: center;
+                gap: .3rem;
+                font-size: .75rem;
+                padding: .15rem .55rem;
+                border-radius: 999px;
+                background: rgba(220,38,38,.04);
+                color: #b91c1c;
+                border: 1px solid rgba(248,113,113,.7);
+            }
+
+            .field-label{
+                font-size: .8rem;
+                text-transform: uppercase;
+                letter-spacing: .08em;
+                color: #6b7280;
+                font-weight: 600;
+                margin-bottom: .25rem;
+            }
+
+            .section-title{
+                font-size: .95rem;
+                font-weight: 600;
+                color: #111827;
+                margin-bottom: .35rem;
+            }
+
+            .section-muted{
+                font-size: .8rem;
+                color: #6b7280;
+                margin-bottom: .75rem;
+            }
+
+            .user-actions{
+                border-top: 1px dashed rgba(148,163,184,.6);
+                margin-top: 1.5rem;
+                padding-top: 1rem;
+                display: flex;
+                justify-content: flex-end;
+                gap: .5rem;
+            }
+
+            .service-box{
+                border-radius: 1rem;
+                border: 1px solid rgba(148,163,184,.45);
+                padding: 1rem 1.2rem;
+                background: #f9fafb;
+            }
+
+            @media (max-width: 768px){
+                .user-shell{
+                    padding: 1.25rem 1.25rem;
+                    border-radius: 1rem;
+                }
+            }
+        </style>
+
+        <h:form id="formUsuario">
+		    <p:growl id="msgs" showDetail="true" life="3500"/>
+		
+			<div class="container-fluid px-4 py-3">
+			    <div class="user-shell">
+			
+			        <!-- Cabeçalho -->
+			        <div class="user-header">
+			            <div class="user-title">Novo Usuário</div>
+			            <div class="user-subtitle">
+			                Preencha os dados abaixo para cadastrar um novo usuário no sistema.
+			            </div>
+			        </div>
+			
+			        <!-- DADOS BÁSICOS -->
+			        <div class="row g-3 mb-4">
+			            <div class="col-md-6">
+			                <label class="field-label">Nome completo</label>
+			                <p:inputText value="#{usuarioController.usuario.nome}"
+			                             required="true"
+			                             requiredMessage="Informe o nome completo."
+			                             styleClass="form-control"/>
+			            </div>
+			
+			            <div class="col-md-6">
+			                <label class="field-label">E-mail</label>
+			                <p:inputText value="#{usuarioController.usuario.email}"
+			                             type="email"
+			                             required="true"
+			                             requiredMessage="Informe o e-mail."
+			                             styleClass="form-control"/>
+			            </div>
+			        </div>
+			
+			        <!-- SERVIÇOS DO USUÁRIO -->
+			        <div class="mt-3">
+			            <div class="d-flex align-items-center gap-2 mb-1">
+			                <div class="section-title">
+			                    Serviços do usuário
+			                </div>
+			
+			                <!-- Chip obrigatório agora aqui -->
+			                <span class="chip-required">
+			                    <i class="pi pi-info-circle"></i>
+			                    Serviço obrigatório
+			                </span>
+			            </div>
+			
+			            <div class="section-muted mb-2">
+			                Selecione pelo menos um serviço que este usuário poderá atender.
+			            </div>
+			
+			            <div class="service-box">
+			                <p:selectManyCheckbox id="servicos"
+			                                      value="#{usuarioController.usuario.servico}"
+			                                      layout="grid"
+			                                      columns="3"
+			                                      required="true"
+			                                      requiredMessage="Selecione ao menos um serviço."
+			                                      styleClass="mt-1">
+			                    <f:selectItems value="#{usuarioController.listaServicos}"
+			                                   var="s"
+			                                   itemValue="#{s}"
+			                                   itemLabel="#{s.nome}"/>
+			                </p:selectManyCheckbox>
+			
+			                <p:message for="servicos"
+			                           display="text"
+			                           styleClass="text-danger small mt-1"/>
+			            </div>
+			        </div>
+			
+			        <!-- MENSAGEM SOBRE SENHA -->
+			        <div class="alert alert-info mt-4 d-flex align-items-center gap-2"
+			             style="font-size:.9rem;">
+			            <i class="bi bi-shield-lock"></i>
+			            <span>
+			                A senha de acesso será gerada automaticamente e enviada de forma segura
+			                para o e-mail informado no cadastro.
+			            </span>
+			        </div>
+			
+			        <!-- AÇÕES -->
+			        <div class="user-actions">
+			            <p:commandButton value="Cancelar"
+			                             type="button"
+			                             styleClass="btn btn-sm btn-outline-secondary"
+			                             onclick="window.history.back();"/>
+			
+			            <p:commandButton value="Salvar usuário"
+			                             icon="pi pi-save"
+			                             styleClass="btn btn-sm btn-primary"
+			                             process="@form"
+			                             update="formUsuario msgs"
+			                             actionListener="#{usuarioController.insertUser}"/>
+			        </div>
+			
+			    </div>
+			</div>
+		</h:form>
+
+
+    </ui:define>
+</ui:composition>

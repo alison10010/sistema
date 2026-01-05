@@ -14,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -74,5 +76,13 @@ public class Usuario implements Serializable {
 	@Column(name = "data_update")
     @UpdateTimestamp
     private LocalDateTime dataUpdate;
+	
+	@PrePersist
+    @PreUpdate
+    private void ajustarMaiusculas() {
+        if (nome != null) nome = nome.toUpperCase();
+        if (email != null) email = email.toLowerCase();
+        if (username != null) username = username.toLowerCase();
+    }
 
 }

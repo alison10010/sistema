@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class SequenciaChamadaService {
 
-    private final String[] sequenciaTipos = {"P", "N", "N"};
+    private final String[] sequenciaTipos = {"P", "N"};
 
     // índice por serviço (id do serviço -> índice atual da sequência)
     private final ConcurrentHashMap<Long, AtomicInteger> mapaIndices = new ConcurrentHashMap<>();

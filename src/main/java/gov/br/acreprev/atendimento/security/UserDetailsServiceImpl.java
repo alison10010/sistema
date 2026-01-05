@@ -29,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Usuario usuario = usuarioRepository.findByUsername(username)
+        Usuario usuario = usuarioRepository.findByUsername(username.toLowerCase())
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + username));
 
         List<Servico> servicos = usuario.getServico();

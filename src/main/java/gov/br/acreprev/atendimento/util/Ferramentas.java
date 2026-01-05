@@ -4,6 +4,8 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.text.Normalizer;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 public class Ferramentas {
@@ -34,6 +36,22 @@ public class Ferramentas {
 	    ).toUpperCase().substring(0, 5);
 	}
 
-
+	public static int randomDeDataHora() {
+        // Capturar a data e hora atual
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        
+        // Formatar a data e hora atual em um formato específico
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String formattedDateTime = currentDateTime.format(formatter);
+        
+        // Pegar os últimos 6 dígitos da data e hora formatada
+        String lastFiveDigits = formattedDateTime.substring(formattedDateTime.length() - 6);
+        
+        // Converter os últimos 5 dígitos para um número inteiro
+        int randomNumber = Integer.parseInt(lastFiveDigits);
+        
+        // retorna o número aleatório de 5 dígitos
+        return randomNumber;
+    }
 
 }
