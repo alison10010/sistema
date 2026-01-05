@@ -1,0 +1,232 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/view/layout/admin.xhtml">
+
+    <ui:define name="title">Usuários</ui:define>
+
+    <ui:define name="content">
+
+        <style>
+            /* CSS mínimo necessário */
+            .page-card{
+                background:#fff;
+                border:1px solid rgba(148,163,184,.35);
+                border-radius:16px;
+                box-shadow:0 12px 30px rgba(15,23,42,.08);
+                padding:18px;
+            }
+            .page-head{
+                display:flex;
+                align-items:flex-start;
+                justify-content:space-between;
+                gap:12px;
+                margin-bottom:12px;
+            }
+            .page-title{
+                font-weight:800;
+                font-size:1.15rem;
+                color:#0f172a;
+                margin:0;
+            }
+            .page-sub{
+                margin:3px 0 0;
+                color:#64748b;
+                font-size:.9rem;
+            }
+            .actions{
+                display:flex;
+                gap:.5rem;
+                flex-wrap:wrap;
+                justify-content:flex-end;
+            }
+            .field-label{
+                font-size:.78rem;
+                text-transform:uppercase;
+                letter-spacing:.06em;
+                color:#64748b;
+                font-weight:700;
+                margin-bottom:.25rem;
+            }
+            .w-100{ width:100%; }
+        </style>
+
+        <h:form id="formUsuario">
+            <p:growl id="msgs" showDetail="true" life="3500"/>
+            
+            <div class="container-fluid px-4 py-3">
+
+            <div class="page-card">
+                <div class="page-head">
+                    <div>
+                        <h2 class="page-title">Usuários cadastrados</h2>
+                        <p class="page-sub">Edite ou remova usuários usando os modais.</p>
+                    </div>
+
+                    <div class="actions">
+                    	<a href="/sistema/usuario/cadastro" title="Cadastro" class="btn btn-outline-success">Novo usuário</a>
+                    	
+                    	
+                        <p:commandButton value="Atualizar"
+                                         icon="pi pi-refresh"
+                                         styleClass="ui-button-outlined"
+                                         actionListener="#{usuarioController.recarregar}"
+                                         update="tbl msgs"/>
+                    </div>
+                </div>
+
+                <p:dataTable id="tbl"
+                             value="#{usuarioController.listaUsuario}"
+                             var="u"
+                             paginator="true"
+                             rows="8"
+                             rowKey="#{u.id}"
+                             emptyMessage="Sem registros."
+                             style="font-size:14px;"
+                             paginatorPosition="bottom">
+
+                    <p:column headerText="Nome" sortBy="#{u.nome}">
+                        <h:outputText value="#{u.nome}" />
+                    </p:column>
+
+                    <p:column headerText="Email" sortBy="#{u.email}">
+                        <h:outputText value="#{u.email}" />
+                    </p:column>
+
+                    <p:column headerText="Usuário" sortBy="#{u.username}">
+                        <h:outputText value="#{u.username}" />
+                    </p:column>
+
+                    <p:column headerText="Acesso" sortBy="#{u.acesso}" style="width:120px;">
+                        <h:outputText value="#{u.acesso}" />
+                    </p:column>
+
+                    <p:column headerText="Ações" style="width:220px;">
+                        <div class="actions">
+                            <!-- EDITAR -->
+                            <p:commandButton value="Editar"
+				                 icon="pi pi-pencil"
+				                 styleClass="ui-button-outlined ui-button-primary"
+				                 process="@this"
+				                 actionListener="#{usuarioController.abrirEditar(u)}"
+				                 update=":formUsuario:dlgEditar"
+				                 oncomplete="PF('dlgEditar').show();" />
+
+
+                            <!-- REMOVER -->
+                            <p:commandButton value="Remover"
+				                 icon="pi pi-trash"
+				                 styleClass="ui-button-outlined ui-button-danger"
+				                 process="@this"
+				                 actionListener="#{usuarioController.abrirRemover(u)}"
+				                 update=":formUsuario:dlgRemover"
+				                 oncomplete="PF('dlgRemover').show();" />
+
+                        </div>
+                    </p:column>
+
+                </p:dataTable>
+            </div>
+
+            <!-- ===================== MODAL EDITAR ===================== -->
+            <p:dialog id="dlgEditar"
+                      widgetVar="dlgEditar"
+                      header="Editar usuário"
+                      modal="true"
+                      closable="true"
+                      resizable="false"
+                      draggable="false"
+                      width="520">
+
+                <h:panelGroup rendered="#{not empty usuarioController.usuarioSelecionado}">
+                    <div class="row g-3">
+
+                        <div class="col-12">
+                            <div class="field-label">Nome</div>
+                            <p:inputText value="#{usuarioController.usuarioSelecionado.nome}"
+                                         styleClass="w-100" />
+                        </div>
+
+                        <div class="col-12">
+                            <div class="field-label">Email</div>
+                            <p:inputText value="#{usuarioController.usuarioSelecionado.email}"
+                                         styleClass="w-100" />
+                        </div>
+
+                        <div class="col-12">
+                            <div class="field-label">Username</div>
+                            <p:inputText value="#{usuarioController.usuarioSelecionado.username}"
+                                         styleClass="w-100" />
+                        </div>
+
+                        <!-- senha opcional -->
+                        <div class="col-12">
+                            <div class="field-label">Nova senha (opcional)</div>
+                            <p:password value="#{usuarioController.novaSenha}"
+                                        feedback="false"
+                                        toggleMask="true"
+                                        styleClass="w-100" />
+                            <small style="color:#64748b;">
+                                Se deixar em branco, mantém a senha atual.
+                            </small>
+                        </div>
+
+                        <div class="col-12" style="display:flex; justify-content:flex-end; gap:.5rem; margin-top:.25rem;">
+                            <p:commandButton value="Cancelar"
+                                             type="button"
+                                             styleClass="ui-button-outlined"
+                                             onclick="PF('dlgEditar').hide();" />
+
+                            <p:commandButton value="Salvar"
+						                 icon="pi pi-check"
+						                 styleClass="ui-button-success"
+						                 actionListener="#{usuarioController.salvarEdicao}"
+						                 update=":formUsuario:tbl :formUsuario:msgs"
+						                 oncomplete="PF('dlgEditar').hide();" />
+
+                        </div>
+
+                    </div>
+                </h:panelGroup>
+            </p:dialog>
+
+            <!-- ===================== MODAL REMOVER ===================== -->
+            <p:dialog id="dlgRemover"
+                      widgetVar="dlgRemover"
+                      header="Confirmar remoção"
+                      modal="true"
+                      closable="true"
+                      resizable="false"
+                      draggable="false"
+                      width="420">
+
+                <h:panelGroup rendered="#{not empty usuarioController.usuarioSelecionado}">
+                    <p style="margin:0 0 12px; color:#334155;">
+                        Tem certeza que deseja remover:
+                        <b>#{usuarioController.usuarioSelecionado.nome}</b>
+                        (#{usuarioController.usuarioSelecionado.username})?
+                    </p>
+
+                    <div style="display:flex; justify-content:flex-end; gap:.5rem;">
+                        <p:commandButton value="Cancelar"
+                                         type="button"
+                                         styleClass="ui-button-outlined"
+                                         onclick="PF('dlgRemover').hide();" />
+
+                        <p:commandButton value="Remover"
+                                         icon="pi pi-trash"
+                                         styleClass="ui-button-danger"
+                                         actionListener="#{usuarioController.confirmarRemover}"
+                                         update="tbl msgs"
+                                         oncomplete="PF('dlgRemover').hide();" />
+                    </div>
+                </h:panelGroup>
+            </p:dialog>
+
+			</div>
+        </h:form>
+
+    </ui:define>
+</ui:composition>
