@@ -21,6 +21,7 @@ public class SecurityConfigurations {
 
         http
             .csrf().disable()
+            
             .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
             .and()
@@ -45,8 +46,13 @@ public class SecurityConfigurations {
 
                 // ✅ libera também o POST do login
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
+                
+                // ✅ MUITO IMPORTANTE (SEM /sistema):
+                .antMatchers("/ws/**").permitAll()
+                .antMatchers("/websocket/**").permitAll() // se você usou esse path em algum lugar
+                .antMatchers("/sockjs/**").permitAll()    // opcional, se existir
 
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
             .and()
 
             .formLogin()

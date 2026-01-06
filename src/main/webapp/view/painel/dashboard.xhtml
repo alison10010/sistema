@@ -1,467 +1,479 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:c="http://java.sun.com/jsp/jstl/core"
-                template="/view/layout/admin.xhtml">
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	template="/view/layout/admin.xhtml">
 
-    <ui:define name="title">Gestão de Senhas</ui:define>
+	<ui:define name="title">Gestão de Senhas</ui:define>
 
-    <ui:define name="content">
+	<ui:define name="content">
 
-        <style>
-            :root{
-		      --bg: #f6f8fb;
-		      --card: #ffffff;
-		      --border: rgba(15, 23, 42, .10);
-		      --text: #0f172a;
-		      --muted: #64748b;
-		    }
-		
-		    body{
-		      background: radial-gradient(1200px 500px at 20% 0%, rgba(13,110,253,.10), transparent 55%),
-		                  radial-gradient(900px 400px at 85% 10%, rgba(220,53,69,.08), transparent 60%),
-		                  var(--bg);
-		      color: var(--text);
-		    }
+		<style>
+:root {
+	--bg: #f6f8fb;
+	--card: #ffffff;
+	--border: rgba(15, 23, 42, .10);
+	--text: #0f172a;
+	--muted: #64748b;
+}
 
-            .dashboard-shell {
-                background: rgba(255,255,255,0.98);
-                border-radius: 1.5rem;
-                box-shadow: 0 18px 45px rgba(15,23,42,0.16);
-                padding: 2rem 2.5rem;
-                border: 1px solid rgba(148,163,184,0.18);
-                margin-bottom: 1.5rem;
-            }
+body {
+	background: radial-gradient(1200px 500px at 20% 0%, rgba(13, 110, 253, .10),
+		transparent 55%),
+		radial-gradient(900px 400px at 85% 10%, rgba(220, 53, 69, .08),
+		transparent 60%), var(--bg);
+	color: var(--text);
+}
 
-            .page-header {
-                padding-bottom: 1.25rem;
-                border-bottom: 1px dashed rgba(148,163,184,0.5);
-                margin-bottom: 1.5rem;
-            }
+.dashboard-shell {
+	background: rgba(255, 255, 255, 0.98);
+	border-radius: 1.5rem;
+	box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
+	padding: 2rem 2.5rem;
+	border: 1px solid rgba(148, 163, 184, 0.18);
+	margin-bottom: 1.5rem;
+}
 
-            .page-title {
-                font-weight: 700;
-                font-size: 1.6rem;
-                color: #111827;
-            }
+.page-header {
+	padding-bottom: 1.25rem;
+	border-bottom: 1px dashed rgba(148, 163, 184, 0.5);
+	margin-bottom: 1.5rem;
+}
 
-            .page-subtitle {
-                color: #6b7280;
-                font-size: 0.95rem;
-            }
+.page-title {
+	font-weight: 700;
+	font-size: 1.6rem;
+	color: #111827;
+}
 
-            .page-badge {
-                font-size: 0.75rem;
-                letter-spacing: 0.12em;
-                text-transform: uppercase;
-                font-weight: 600;
-                color: #6b7280;
-            }
+.page-subtitle {
+	color: #6b7280;
+	font-size: 0.95rem;
+}
 
-            .principal-card {
-                border-radius: var(--dash-card-radius);
-                border: 0;
-                background: #ffffff;
-                box-shadow: 0 8px 22px rgba(15,23,42,0.06);
-                transition: all .18s ease-in-out;
-                position: relative;
-                overflow: hidden;
-            }
+.page-badge {
+	font-size: 0.75rem;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	font-weight: 600;
+	color: #6b7280;
+}
 
-            .principal-card::before {
-                content: "";
-                position: absolute;
-                inset: 0;
-                background: linear-gradient(135deg, rgba(13,110,253,0.1), transparent);
-                opacity: 0;
-                transition: opacity .2s ease-in-out;
-            }
+.principal-card {
+	border-radius: var(--dash-card-radius);
+	border: 0;
+	background: #ffffff;
+	box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+	transition: all .18s ease-in-out;
+	position: relative;
+	overflow: hidden;
+}
 
-            .principal-card:hover::before {
-                opacity: 1;
-            }
+.principal-card::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(135deg, rgba(13, 110, 253, 0.1), transparent);
+	opacity: 0;
+	transition: opacity .2s ease-in-out;
+}
 
-            .principal-item {
-                border-radius: var(--dash-card-radius);
-                border: none;
-                cursor: pointer;
-                padding: 0;
-                background: transparent;
-            }
+.principal-card:hover::before {
+	opacity: 1;
+}
 
-            .principal-item > .principal-card {
-                margin-bottom: 0.4rem;
-            }
+.principal-item {
+	border-radius: var(--dash-card-radius);
+	border: none;
+	cursor: pointer;
+	padding: 0;
+	background: transparent;
+}
 
-            .principal-item:hover .principal-card {
-                transform: translateY(-3px);
-                box-shadow: 0 16px 40px rgba(15,23,42,0.16);
-            }
+.principal-item>.principal-card {
+	margin-bottom: 0.4rem;
+}
 
-            .principal-item.active .principal-card {
-                border: 2px solid var(--dash-primary);
-                box-shadow: 0 18px 42px rgba(37,99,235,0.45);
-            }
+.principal-item:hover .principal-card {
+	transform: translateY(-3px);
+	box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
+}
 
-            .principal-prefix {
-                width: 2.8rem;
-                height: 2.8rem;
-                border-radius: 999px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-weight: 700;
-                font-size: 1.1rem;
-                background: var(--dash-primary-soft);
-                color: var(--dash-primary);
-            }
+.principal-item.active .principal-card {
+	border: 2px solid var(--dash-primary);
+	box-shadow: 0 18px 42px rgba(37, 99, 235, 0.45);
+}
 
-            .principal-name {
-                font-weight: 600;
-                color: #111827;
-            }
+.principal-prefix {
+	width: 2.8rem;
+	height: 2.8rem;
+	border-radius: 999px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 700;
+	font-size: 1.1rem;
+	background: var(--dash-primary-soft);
+	color: var(--dash-primary);
+}
 
-            .principal-meta {
-                font-size: 0.8rem;
-                color: #6b7280;
-            }
+.principal-name {
+	font-weight: 600;
+	color: #111827;
+}
 
-            .small-label {
-                font-size: .78rem;
-                text-transform: uppercase;
-                letter-spacing: .14rem;
-                color: #9ca3af;
-                font-weight: 700;
-            }
+.principal-meta {
+	font-size: 0.8rem;
+	color: #6b7280;
+}
 
-            .sub-card {
-                border-radius: 1rem;
-                border: 0;
-                box-shadow: 0 8px 22px rgba(15,23,42,0.06);
-            }
+.small-label {
+	font-size: .78rem;
+	text-transform: uppercase;
+	letter-spacing: .14rem;
+	color: #9ca3af;
+	font-weight: 700;
+}
 
-            .sub-header {
-                font-size: 0.9rem;
-                color: #6b7280;
-            }
+.sub-card {
+	border-radius: 1rem;
+	border: 0;
+	box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+}
 
-            .badge-pill {
-                border-radius: 999px;
-            }
+.sub-header {
+	font-size: 0.9rem;
+	color: #6b7280;
+}
 
-            .field-label {
-                font-size: 0.8rem;
-                text-transform: uppercase;
-                letter-spacing: 0.07rem;
-                color: #6b7280;
-                font-weight: 600;
-                margin-bottom: 0.25rem;
-            }
+.badge-pill {
+	border-radius: 999px;
+}
 
-            .no-subservicos {
-                border-radius: 1rem;
-                border-style: dashed;
-                border-width: 1px;
-                border-color: #d1d5db;
-                background: #f9fafb;
-                color: #6b7280;
-                font-size: 0.9rem;
-            }
+.field-label {
+	font-size: 0.8rem;
+	text-transform: uppercase;
+	letter-spacing: 0.07rem;
+	color: #6b7280;
+	font-weight: 600;
+	margin-bottom: 0.25rem;
+}
 
-            @media (max-width: 992px) {
-                .dashboard-shell {
-                    padding: 1.5rem;
-                    border-radius: 1rem;
-                }
-            }
-            
-            body .ui-commandlink:hover, body .ui-link:hover{
-				text-decoration: none !important;
-			}
-			        
-        </style>
+.no-subservicos {
+	border-radius: 1rem;
+	border-style: dashed;
+	border-width: 1px;
+	border-color: #d1d5db;
+	background: #f9fafb;
+	color: #6b7280;
+	font-size: 0.9rem;
+}
 
-        <h:form id="formDashboard">
+@media ( max-width : 992px) {
+	.dashboard-shell {
+		padding: 1.5rem;
+		border-radius: 1rem;
+	}
+}
 
-            <p:growl id="msgs" showDetail="true" life="3000"/>
+body .ui-commandlink:hover, body .ui-link:hover {
+	text-decoration: none !important;
+}
+</style>
 
-            <div class="container-fluid px-4 py-3">
-                <div class="dashboard-shell">
+		<h:form id="formDashboard">
 
-                    <!-- Cabeçalho -->
-                    
+			<p:growl id="msgs" showDetail="true" life="3000" />
 
-                    <div class="row g-4">
+			<div class="container-fluid px-4 py-3">
+				<div class="dashboard-shell">
 
-                        <!-- COLUNA ESQUERDA: ATENDIMENTOS PRINCIPAIS -->
-                        <div class="col-lg-4">
-                            <div class="card border-0 shadow-sm" style="border-radius: 1.1rem;">
-                                <div class="card-header bg-white" style="border-radius: 1.1rem 1.1rem 0 0;">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <div class="small-label mb-1">Passo 1</div>
-                                            <h2 class="h6 mb-0">Atendimentos principais</h2>
-                                        </div>
+					<!-- Cabeçalho -->
 
-                                        <!-- Novo principal -->
-                                        <p:commandButton value="Novo principal"
-                                                         icon="bi bi-plus-circle"
-                                                         styleClass="btn btn-sm btn-outline-primary"
-                                                         actionListener="#{dashboardController.novoServico}"
-                                                         update="@form"
-                                                         process="@this"/>
-         
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <p class="text-muted small mb-2">
-                                        Clique em um item para editar seus sub-serviços e sub-senhas.
-                                    </p>
 
-                                    <h:panelGroup id="listaPrincipais" layout="block">
-                                        <div class="list-group list-group-flush">
+					<div class="row g-4">
 
-                                            <ui:repeat value="#{dashboardController.servicos}" var="s">
-                                                <p:commandLink
-                                                        styleClass="principal-item list-group-item-action mb-2 #{dashboardController.servicoSelecionado != null and dashboardController.servicoSelecionado.id == s.id ? 'active' : ''}"
-                                                        actionListener="#{dashboardController.editarServico(s)}"
-                                                        update="@form"
-                                                        process="@this"
-                                                        style="border:0; padding:0; background:transparent;">
-                                                    <div class="principal-card">
-                                                        <div class="card-body d-flex align-items-center gap-3">
-                                                            <div class="principal-prefix">
-                                                                #{s.prefixo}
-                                                            </div>
-                                                            <div>
-                                                                <div class="principal-name">
-                                                                    #{s.nome}
-                                                                </div>
-                                                                <div class="principal-meta">
-                                                                    Prefixo: #{s.prefixo} 
-                                                                </div>
-                                                            </div>
-                                                            <div class="ms-auto d-none d-md-block">
-                                                                <span class="badge #{s.ativo ? 'bg-success' : 'bg-secondary'} badge-pill">
-                                                                    #{s.ativo ? 'Ativo' : 'Inativo'}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </p:commandLink>
-                                            </ui:repeat>
+						<!-- COLUNA ESQUERDA: ATENDIMENTOS PRINCIPAIS -->
+						<div class="col-lg-4">
+							<div class="card border-0 shadow-sm"
+								style="border-radius: 1.1rem;">
+								<div class="card-header bg-white"
+									style="border-radius: 1.1rem 1.1rem 0 0;">
+									<div class="d-flex justify-content-between align-items-center">
+										<div>
+											<div class="small-label mb-1">Passo 1</div>
+											<h2 class="h6 mb-0">Atendimentos principais</h2>
+										</div>
 
-                                        </div>
-                                    </h:panelGroup>
-                                </div>
-                            </div>
-                        </div>
+										<!-- Novo principal -->
+										<p:commandButton value="Novo principal"
+											icon="bi bi-plus-circle"
+											styleClass="btn btn-sm btn-outline-primary"
+											actionListener="#{dashboardController.novoServico}"
+											update="@form" process="@this" />
 
-                        <!-- COLUNA DIREITA: DETALHES DO PRINCIPAL SELECIONADO -->
-                        <div class="col-lg-8">
-                            <h:panelGroup id="areaDetalhes" layout="block">
-                                <div class="card border-0 shadow-sm" style="border-radius: 1.1rem;">
-                                    <div class="card-header bg-white d-flex justify-content-between align-items-center"
-                                         style="border-radius: 1.1rem 1.1rem 0 0;">
-                                        <div>
-                                            <div class="small-label mb-1">Passo 2</div>
-                                            <h2 class="h6 mb-0">
-                                                <h:outputText value="Selecione um atendimento principal"
-                                                              rendered="#{dashboardController.servicoSelecionado == null}"/>
-                                                <h:outputText value="Configurando: #{dashboardController.servicoSelecionado.nome}"
-                                                              rendered="#{dashboardController.servicoSelecionado != null}"/>
-                                            </h2>
-                                        </div>
+									</div>
+								</div>
+								<div class="card-body">
+									<p class="text-muted small mb-2">Clique em um item para
+										editar seus sub-serviços e sub-senhas.</p>
 
-                                        <p:commandButton id="btnSalvarPrincipal"
-                                                         value="Salvar alterações"
-                                                         icon="bi bi-save"
-                                                         styleClass="btn btn-sm btn-outline-secondary"
-                                                         actionListener="#{dashboardController.salvarServico}"
-                                                         update="@form"
-                                                         process="@form"
-                                                         disabled="#{dashboardController.servicoSelecionado == null}"/>
-                                    </div>
+									<h:panelGroup id="listaPrincipais" layout="block">
+										<div class="list-group list-group-flush">
 
-                                    <div class="card-body">
+											<ui:repeat value="#{dashboardController.servicos}" var="s">
+												<p:commandLink
+													styleClass="principal-item list-group-item-action mb-2 #{dashboardController.servicoSelecionado != null and dashboardController.servicoSelecionado.id == s.id ? 'active' : ''}"
+													actionListener="#{dashboardController.editarServico(s)}"
+													update="@form" process="@this"
+													style="border:0; padding:0; background:transparent;">
+													<div class="principal-card">
+														<div class="card-body d-flex align-items-center gap-3">
+															<div class="principal-prefix">#{s.prefixo}</div>
+															<div>
+																<div class="principal-name">#{s.nome}</div>
+																<div class="principal-meta">Prefixo: #{s.prefixo}
+																</div>
+															</div>
+															<div class="ms-auto d-none d-md-block">
+																<span
+																	class="badge #{s.ativo ? 'bg-success' : 'bg-secondary'} badge-pill">
+																	#{s.ativo ? 'Ativo' : 'Inativo'} </span>
+															</div>
+														</div>
+													</div>
+												</p:commandLink>
+											</ui:repeat>
 
-                                        <!-- INFO PRINCIPAL -->
-                                        <h:panelGroup id="areaPrincipalInfo"
-                                                      rendered="#{dashboardController.servicoSelecionado != null}">
-                                            <div class="row g-3 align-items-end mb-4">
-                                                <div class="col-md-6">
-                                                    <label class="field-label">
-                                                        Nome do atendimento principal
-                                                    </label>
-                                                    <h:inputText value="#{dashboardController.servicoSelecionado.nome}"
-                                                                 styleClass="form-control"/>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <label class="field-label">
-                                                        Prefixo padrão
-                                                    </label>
-                                                    <h:inputText value="#{dashboardController.servicoSelecionado.prefixo}"
-                                                                 maxlength="2"
-                                                                 styleClass="form-control text-uppercase"/>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <label class="field-label">Status</label>
-                                                    <h:selectOneMenu value="#{dashboardController.servicoSelecionado.ativo}"
-                                                                     styleClass="form-select">
-                                                        <f:selectItem itemValue="#{true}" itemLabel="Ativo"/>
-                                                        <f:selectItem itemValue="#{false}" itemLabel="Inativo"/>
-                                                    </h:selectOneMenu>
-                                                </div>                                                
-                                            </div>
-                                            <div class="row g-3 align-items-end mb-4" style="margin-top: -15px;">
-                                            	<div class="col-md-3">
-                                                    <label class="field-label">
-                                                        Comparecer
-                                                    </label>
-                                                    <h:selectOneMenu styleClass="form-select" 
-	                                                 	value="#{dashboardController.servicoSelecionado.comparecer}">
-	                                                    <f:selectItem itemValue="" itemLabel="Selecione..." noSelectionOption="true" />							        
-												        <f:selectItem itemValue="CONSULTÓRIO" itemLabel="CONSULTÓRIO"/>
-												        <f:selectItem itemValue="GUICHÊ" itemLabel="GUICHÊ"/>
-												        <f:selectItem itemValue="MESA" itemLabel="MESA"/>
-												        <f:selectItem itemValue="RECEPÇÃO" itemLabel="RECEPÇÃO"/>
-												        <f:selectItem itemValue="SALA" itemLabel="SALA"/>
-												        <f:selectItem itemValue="TRIAGEM" itemLabel="TRIAGEM"/>
-	                                                 </h:selectOneMenu>
-                                                </div>  
-                                                
-                                                <div class="col-md-3">
-                                                    <label class="field-label">
-                                                        Tela de Senha
-                                                    </label>
-                                                    
-                                                    <h:selectOneMenu styleClass="form-select" value="#{dashboardController.servicoSelecionado.tela}">						        
-														<f:selectItems value="#{telaController.telas}" var="tela" itemValue="#{tela.id}" itemLabel="#{tela.nome}"/>
+										</div>
+									</h:panelGroup>
+								</div>
+							</div>
+						</div>
+
+						<!-- COLUNA DIREITA: DETALHES DO PRINCIPAL SELECIONADO -->
+						<div class="col-lg-8">
+							<h:panelGroup id="areaDetalhes" layout="block">
+								<div class="card border-0 shadow-sm"
+									style="border-radius: 1.1rem;">
+									<div
+										class="card-header bg-white d-flex justify-content-between align-items-center"
+										style="border-radius: 1.1rem 1.1rem 0 0;">
+										<div>
+											<div class="small-label mb-1">Passo 2</div>
+											<h2 class="h6 mb-0">
+												<h:outputText value="Selecione um atendimento principal"
+													rendered="#{dashboardController.servicoSelecionado == null}" />
+												<h:outputText
+													value="Configurando: #{dashboardController.servicoSelecionado.nome}"
+													rendered="#{dashboardController.servicoSelecionado != null}" />
+											</h2>
+										</div>
+
+										<p:commandButton id="btnSalvarPrincipal"
+											value="Salvar alterações" icon="bi bi-save"
+											styleClass="btn btn-sm btn-outline-secondary"
+											actionListener="#{dashboardController.salvarServico}"
+											update="@form" process="@form"
+											disabled="#{dashboardController.servicoSelecionado == null}" />
+									</div>
+
+									<div class="card-body">
+
+										<!-- INFO PRINCIPAL -->
+										<h:panelGroup id="areaPrincipalInfo"
+											rendered="#{dashboardController.servicoSelecionado != null}">
+											<div class="row g-3 align-items-end mb-4">
+												<div class="col-md-6">
+													<label class="field-label"> Nome do atendimento
+														principal </label>
+													<h:inputText
+														value="#{dashboardController.servicoSelecionado.nome}"
+														styleClass="form-control" />
+												</div>
+												<div class="col-md-3">
+													<label class="field-label"> Prefixo padrão </label>
+													<h:inputText
+														value="#{dashboardController.servicoSelecionado.prefixo}"
+														maxlength="1" styleClass="form-control text-uppercase" />
+												</div>
+												<div class="col-md-3">
+													<label class="field-label">Status</label>
+													<h:selectOneMenu
+														value="#{dashboardController.servicoSelecionado.ativo}"
+														styleClass="form-select">
+														<f:selectItem itemValue="#{true}" itemLabel="Ativo" />
+														<f:selectItem itemValue="#{false}" itemLabel="Inativo" />
 													</h:selectOneMenu>
-													
-                                                </div>                                                
-                                                 
-                                             </div>
-                                        </h:panelGroup>
-                                        
-                                        <br />
+												</div>
+											</div>
+											<div class="row g-3 align-items-end mb-4"
+												style="margin-top: -15px;">
+												<div class="col-md-3">
+													<label class="field-label"> Comparecer </label>
+													<h:selectOneMenu styleClass="form-select"
+														value="#{dashboardController.servicoSelecionado.comparecer}">
+														<f:selectItem itemValue="" itemLabel="Selecione..."
+															noSelectionOption="true" />
+														<f:selectItem itemValue="CONSULTÓRIO"
+															itemLabel="CONSULTÓRIO" />
+														<f:selectItem itemValue="GUICHÊ" itemLabel="GUICHÊ" />
+														<f:selectItem itemValue="MESA" itemLabel="MESA" />
+														<f:selectItem itemValue="RECEPÇÃO" itemLabel="RECEPÇÃO" />
+														<f:selectItem itemValue="SALA" itemLabel="SALA" />
+														<f:selectItem itemValue="TRIAGEM" itemLabel="TRIAGEM" />
+													</h:selectOneMenu>
+												</div>
 
-                                        <!-- SUB-SERVIÇOS -->
-                                        <h:panelGroup id="areaSubservicos"
-                                                      rendered="#{dashboardController.servicoSelecionado != null}">
-                                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                                <div>
-                                                    <div class="small-label mb-1"><i class="bi bi-layers"></i>Sub-serviços</div>
-                                                    <p class="sub-header mb-0">
-                                                        Cada sub-serviço pode disponibilizar senha Normal e Prioritária (P) no Totem.
-                                                    </p>
-                                                </div>
+												<div class="col-md-3">
+													<label class="field-label"> Tela de Senha </label>
 
-                                                <p:commandButton value="Novo sub-serviço"
-                                                                 icon="bi bi-plus-circle"
-                                                                 styleClass="btn btn-sm btn-outline-primary"
-                                                                 actionListener="#{dashboardController.adicionarSubServico}"
-                                                                 update="@form"
-                                                                 process="@this"/>
-                                            </div>
+													<h:selectOneMenu styleClass="form-select"
+														value="#{dashboardController.servicoSelecionado.tela}">
+														<f:selectItems value="#{telaController.telas}" var="tela"
+															itemValue="#{tela.id}" itemLabel="#{tela.nome}" />
+													</h:selectOneMenu>
 
-                                            <h:panelGroup id="listaSubservicos">
-                                                <c:if test="#{empty dashboardController.servicoSelecionado.subServicos}">
-                                                    <div class="no-subservicos p-3 d-flex align-items-center gap-2 mb-3">
-                                                        <i class="bi bi-exclamation-circle"></i>
-                                                        <span>
-                                                            Nenhum sub-serviço cadastrado para este atendimento.
-                                                            Clique em <strong>“Novo sub-serviço”</strong> para adicionar.
-                                                        </span>
-                                                    </div>
-                                                </c:if>
+												</div>
 
-                                                <ui:repeat value="#{dashboardController.servicoSelecionado.subServicos}" var="sub">
-                                                	<h:panelGroup rendered="#{sub.ativo}">
-	                                                    <div class="card sub-card mb-3">
-	                                                        <div class="card-body">
-	                                                            <div class="d-flex justify-content-between flex-wrap align-items-start">
-	                                                                <div class="me-3 flex-grow-1">
-	                                                                    <div class="row g-2">
-	                                                                        <div class="col-md-6">
-	                                                                            <label class="field-label">
-	                                                                                Nome do sub-serviço
-	                                                                            </label>
-	                                                                            <h:inputText value="#{sub.nome}"
-	                                                                                         styleClass="form-control form-control-sm"/>
-	                                                                        </div>
-	                                                                        <div class="col-md-3">
-	                                                                            <label class="field-label">
-	                                                                                Prefixo
-	                                                                            </label>
-	                                                                            <h:inputText value="#{sub.prefixo}"
-	                                                                                         styleClass="form-control form-control-sm"/>
-	                                                                        </div>
-	                                                                        <div class="col-md-12">
-	                                                                            <label class="field-label">
-	                                                                                Descrição
-	                                                                            </label>
-	                                                                            <h:inputTextarea value="#{sub.descricao}"
-	                                                                                             rows="2"
-	                                                                                             styleClass="form-control form-control-sm"/>
-	                                                                        </div>
-	                                                                    </div>
-	                                                                </div>
-	
-	                                                                <div class="ms-auto mt-3 mt-md-0" style="min-width: 230px;">
-	                                                                    <div class="small-label mb-2">Sub-senhas disponíveis</div>
-	
-	                                                                    <div class="form-check mb-1">
-	                                                                        <h:selectBooleanCheckbox value="#{sub.subSenhaNormal}"
-	                                                                                                 styleClass="form-check-input"/>
-	                                                                        <span class="form-check-label">
-	                                                                            Senha Normal
-	                                                                        </span>
-	                                                                    </div>
-	
-	                                                                    <div class="form-check mb-2">
-	                                                                        <h:selectBooleanCheckbox value="#{sub.subSenhaPrioritaria}"
-	                                                                                                 styleClass="form-check-input"/>
-	                                                                        <span class="form-check-label">
-	                                                                            Senha Prioritária (P)
-	                                                                        </span>
-	                                                                    </div>
-	
-	                                                                    <p:commandButton value="Remover"
-	                                                                                     icon="bi bi-trash"
-	                                                                                     styleClass="btn btn-sm btn-outline-danger mt-1"
-	                                                                                     actionListener="#{dashboardController.removerSubServico(sub)}"
-	                                                                                     update="@form"
-	                                                                                     process="@this"/>
-	                                                                </div>
-	                                                            </div>
-	                                                        </div>
-	                                                    </div>
-	                                            	</h:panelGroup>
-                                                </ui:repeat>
-                                            </h:panelGroup>
-                                        </h:panelGroup>
+											</div>
+										</h:panelGroup>
 
-                                        <!-- MENSAGEM DE AJUDA -->
-                                        <h:panelGroup rendered="#{dashboardController.servicoSelecionado == null}">
-                                            <div id="areaAjuda" class="text-muted">
-                                                <i class="bi bi-info-circle me-1"></i>
-                                                Nenhum atendimento principal selecionado. Clique em um serviço principal
-                                                ao lado para começar a configurar.
-                                            </div>
-                                        </h:panelGroup>
+										<br />
 
-                                    </div>
-                                </div>
-                            </h:panelGroup>
-                        </div>
+										<!-- SUB-SERVIÇOS -->
+										<h:panelGroup id="areaSubservicos"
+											rendered="#{dashboardController.servicoSelecionado != null}">
+											<div
+												class="d-flex justify-content-between align-items-center mb-2">
+												<div>
+													<div class="small-label mb-1">
+														<i class="bi bi-layers"></i>Sub-serviços
+													</div>
+													<p class="sub-header mb-0">Cada sub-serviço pode
+														disponibilizar senha Normal e Prioritária (P) no Totem.</p>
+												</div>
 
-                    </div>
-                </div>
-            </div>
-        </h:form>
+												<p:commandButton value="Novo sub-serviço"
+													icon="bi bi-plus-circle"
+													styleClass="btn btn-sm btn-outline-primary"
+													actionListener="#{dashboardController.adicionarSubServico}"
+													update="@form" process="@this" />
+											</div>
 
-    </ui:define>
+											<h:panelGroup id="listaSubservicos">
+												<c:if
+													test="#{empty dashboardController.servicoSelecionado.subServicos}">
+													<div
+														class="no-subservicos p-3 d-flex align-items-center gap-2 mb-3">
+														<i class="bi bi-exclamation-circle"></i> <span>
+															Nenhum sub-serviço cadastrado para este atendimento.
+															Clique em <strong>“Novo sub-serviço”</strong> para
+															adicionar.
+														</span>
+													</div>
+												</c:if>
+
+												<ui:repeat
+													value="#{dashboardController.servicoSelecionado.subServicos}"
+													var="sub">
+													<h:panelGroup rendered="#{sub.ativo}">
+												    <div class="card sub-card mb-3">
+												        <div class="card-body">
+												
+												            <div class="row g-2">
+												
+												                <!-- Nome -->
+												                <div class="col-md-6">
+												                    <label class="field-label">Nome do sub-serviço</label>
+												                    <h:inputText value="#{sub.nome}"
+												                                 styleClass="form-control form-control-sm"/>
+												                </div>
+												
+												                <!-- Prefixo -->
+												                <div class="col-md-3">
+												                    <label class="field-label">Prefixo</label>
+												                    <h:inputText value="#{sub.prefixo}"
+												                                 maxlength="1"
+												                                 styleClass="form-control form-control-sm"/>
+												                </div>
+												
+												                <!-- Descrição -->
+												                <div class="col-md-12">
+												                    <label class="field-label">Descrição</label>
+												                    <h:inputTextarea value="#{sub.descricao}"
+												                                     rows="2"
+												                                     styleClass="form-control form-control-sm"/>
+												                </div>
+												
+												                <!-- Sub-senhas + botão (ABAIXO da descrição) -->
+												                <div class="col-md-12 mt-1">
+												                    <div class="small-label mb-1">
+												                        Sub-senhas disponíveis
+												                    </div>
+												
+												                    <div class="d-flex align-items-center gap-3">
+												                        <!-- Normal -->
+												                        <div class="form-check m-0">
+												                            <h:selectBooleanCheckbox
+												                                value="#{sub.subSenhaNormal}"
+												                                styleClass="form-check-input"/>
+												                            <label class="form-check-label ms-1">
+												                                Senha Normal
+												                            </label>
+												                        </div>
+												
+												                        <!-- Prioritária -->
+												                        <div class="form-check m-0">
+												                            <h:selectBooleanCheckbox
+												                                value="#{sub.subSenhaPrioritaria}"
+												                                styleClass="form-check-input"/>
+												                            <label class="form-check-label ms-1">
+												                                Senha Prioritária (P)
+												                            </label>
+												                        </div>
+												
+												                        <!-- Botão -->
+												                        <p:commandButton value="Remover"
+												                                         icon="bi bi-trash"
+												                                         styleClass="btn btn-sm btn-outline-danger ms-auto"
+												                                         actionListener="#{dashboardController.removerSubServico(sub)}"
+												                                         update="@form"
+												                                         process="@this"/>
+												                    </div>
+												                </div>
+												
+												            </div>
+												
+												        </div>
+												    </div>
+												</h:panelGroup>
+
+												</ui:repeat>
+											</h:panelGroup>
+										</h:panelGroup>
+
+										<!-- MENSAGEM DE AJUDA -->
+										<h:panelGroup
+											rendered="#{dashboardController.servicoSelecionado == null}">
+											<div id="areaAjuda" class="text-muted">
+												<i class="bi bi-info-circle me-1"></i> Nenhum atendimento
+												principal selecionado. Clique em um serviço principal ao
+												lado para começar a configurar.
+											</div>
+										</h:panelGroup>
+
+									</div>
+								</div>
+							</h:panelGroup>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</h:form>
+
+	</ui:define>
 </ui:composition>

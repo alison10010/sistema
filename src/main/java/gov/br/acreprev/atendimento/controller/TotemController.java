@@ -2,7 +2,6 @@ package gov.br.acreprev.atendimento.controller;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -13,6 +12,7 @@ import javax.inject.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.context.annotation.SessionScope;
 
 import gov.br.acreprev.atendimento.model.Senha;
@@ -27,6 +27,7 @@ import lombok.Setter;
 @Getter @Setter 
 @SessionScope 
 @Controller
+@CrossOrigin(origins = "*")
 public class TotemController implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

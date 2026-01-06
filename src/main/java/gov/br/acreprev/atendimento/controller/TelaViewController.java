@@ -5,8 +5,11 @@ import java.io.Serializable;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Named;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 @Named
 @ViewScoped
+@CrossOrigin(origins = "*")
 public class TelaViewController implements Serializable {
 
     private String codigoTela;

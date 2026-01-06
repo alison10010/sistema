@@ -1,19 +1,18 @@
 package gov.br.acreprev.atendimento.controller;
 
 import java.io.Serializable;
+import java.lang.ProcessBuilder.Redirect;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.inject.Named;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.context.annotation.SessionScope;
 
 import gov.br.acreprev.atendimento.model.Servico;
@@ -23,6 +22,7 @@ import gov.br.acreprev.atendimento.repository.UsuarioRepository;
 import gov.br.acreprev.atendimento.util.EmailSenha;
 import gov.br.acreprev.atendimento.util.Ferramentas;
 import gov.br.acreprev.atendimento.util.Mensagens;
+import gov.br.acreprev.atendimento.util.Redirecionar;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -99,6 +99,8 @@ public class UsuarioController implements Serializable {
             usuario = new Usuario(); // limpa o form
 
             Mensagens.info("Cadastro realizado!", "");
+            
+            Redirecionar.irParaURL("usuario/usuarios");
 
         } catch (Exception e) {
             e.printStackTrace();
