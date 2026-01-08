@@ -232,11 +232,30 @@ public class DashboardController implements Serializable {
     }
 
     public void removerSubServico(SubServico sub) {
+        final String cod = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        final java.security.SecureRandom random = new java.security.SecureRandom();
+
         if (servicoSelecionado == null || sub == null) {
             return;
-        }        
+        }
+
+        // Gera um prefixo "aleatório" e praticamente impossível de repetir (4 chars + 2 do timestamp)
+        String prefixo;
+        {
+            StringBuilder sb = new StringBuilder(6);
+            for (int i = 0; i < 4; i++) {
+                sb.append(cod.charAt(random.nextInt(cod.length())));
+            }
+            long t = System.currentTimeMillis() % 100; // 00..99
+            sb.append(String.format("%02d", t));
+            prefixo = sb.toString();
+        }
+
+        // Em vez de null, define um prefixo novo e desativa
+        sub.setPrefixo(prefixo);
         sub.setAtivo(false);
     }
+
 
     // === Utilitário para mensagens JSF ===
 

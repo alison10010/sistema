@@ -22,7 +22,7 @@ public class HomeController {
 		return "login/index"; 
 	}
 	
-	@GetMapping("/totem")
+	@GetMapping("/")
 	public String home() {
 		totemController.init();
 		return "painel/totem";

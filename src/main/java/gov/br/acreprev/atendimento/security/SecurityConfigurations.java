@@ -37,15 +37,11 @@ public class SecurityConfigurations {
                     "/img/**",
                     "/bootstrap/**"
                 ).permitAll()
-
-                .antMatchers("/login", "/error", "/api/**").permitAll()
-                .antMatchers("/totem", "/tela").permitAll()
-                .antMatchers("/cadastro-colaborador", "/cadastro").permitAll()
-                .antMatchers("/view/livre/**", "/view/login/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/jwt/token").permitAll()
-
-                // ✅ libera também o POST do login
-                .antMatchers(HttpMethod.POST, "/login").permitAll()
+                
+                .antMatchers("/painel", "/dashboard").authenticated()
+                .antMatchers("/relatorio", "/gerenciar-telas").authenticated()
+                .antMatchers("/usuario/**", "/gerenciar-telas").authenticated()
+                .antMatchers("/view/livre/**", "/relatorio-periodo").permitAll()
                 
                 // ✅ MUITO IMPORTANTE (SEM /sistema):
                 .antMatchers("/ws/**").permitAll()
